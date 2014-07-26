@@ -1,0 +1,11 @@
+{{#if hasIcon}}
+    <i {{action toggle}} {{bind-attr class="iconClass"}}></i>
+{{else}}
+    <a {{action toggle}} class="text">*</a>
+{{/if}}
+
+<span {{action select}} {{bind-attr class="nodeSelectedClasses"}}>{{node.title}}</span>
+
+{{#if expanded}}
+    {{em-tree-branch node=node async=async targetObject=targetObject}}
+{{/if}}

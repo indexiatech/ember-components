@@ -1,0 +1,49 @@
+{
+  "name": "ember-components",
+  "version": "0.1.0",
+  "description": "A suite of components for Ember.js",
+  "homepage": "http://ember-addons.github.io/ember-components",
+  "authors": [
+    "Asaf Shakarchi <asaf000@gmail.com>"
+  ],
+  "keywords": [
+    "emberjs",
+    "ember",
+    "components",
+    "coffee",
+    "bootstrap",
+    "javascript",
+    "ui",
+    "html5",
+    "css3",
+    "html",
+    "css",
+    "js",
+    "tree",
+    "tabs",
+    "accordion",
+    "modal",
+    "wysiwyg"
+  ],
+  "license": "ASF 2.0",
+  "ignore": [
+    "bower_components",
+    "examples",
+    "node_modules",
+    "test",
+    "tmp",
+    "**/.*",
+    "Brocfile.js",
+    "karma.conf.js",
+    "package.json",
+    "testem.json"
+  ],
+  "dependencies": {
+    "ember": "^1.5.1",
+    "ember-utils": "~0.1.0",
+    "ic-styled": "~1.1.6"
+  },
+  "devDependencies": {
+    "ember-qunit": "0.1.3"
+  }
+}

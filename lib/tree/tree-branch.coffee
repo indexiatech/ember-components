@@ -1,0 +1,44 @@
+#(c) 2014 Indexia, Inc.
+
+`import {Component, ArrayProxy, computed} from 'ember';`
+#TODO: Import
+WithConfigMixin = Em.Eu.WithConfigMixin
+
+###*
+# A branch of a tree.
+#
+# @class TreeBranch
+###
+TreeBranch = Component.extend WithConfigMixin,
+    ###*
+    # The node to render its children within this branch
+    # this property is expected to be defined by the user
+    ###
+    node: undefined
+
+    ###*
+    # The root node of the tree
+    ###
+    rootNode: computed.alias 'node.root'
+
+    ###*
+    # A list of {{#crossLink "TreeNode"}}nodes{{/crossLink}} instances.
+    ###
+    nodes: computed.alias 'node.children'
+
+    ###*
+    # True if node's children should be loaded asynchronously
+    # This gives the opportunity to the user to invoke an async call to the server to retrieve data for the current
+    # branch being opened
+    ###
+    async: false
+
+    tagName: 'ul'
+    layoutName: 'em-tree-branch'
+    classNameBindings: ['styleClasses']
+
+    styleClasses: (->
+        @get('config.tree.branchClasses')?.join(" ")
+    ).property()
+
+`export default TreeBranch;`

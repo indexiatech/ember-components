@@ -1,0 +1,7 @@
+#!/bin/sh
+echo "# running scripts/test"
+scripts/build
+node_modules/.bin/bower install
+node_modules/.bin/testem ci -l chrome
+
+

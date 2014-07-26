@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "# running scripts/build"
+rm -rf dist
+broccoli build dist
