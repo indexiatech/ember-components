@@ -9,7 +9,10 @@ This project aims to be the successor of our Bootstrap for Ember project as all 
 
 # Installation & Docs
 
-Please checkout the [Getting Started page](http://indexiatech.github.io/ember-components/#/getstarted)
+With ember-cli:
+`npm install --save ember-cli-components`
+
+For more info please read the [Getting Started Page](http://indexiatech.github.io/ember-components/#/getstarted)
 
 # License
 
