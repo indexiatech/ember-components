@@ -13,4 +13,4 @@ Please checkout the [Getting Started page](http://indexiatech.github.io/ember-co
 
 # License
 
-See [License](https://github.com/indexiatech/ember-components/blob/master/README.md) file 
+See [License](https://github.com/indexiatech/ember-components/blob/master/LICENSE) file 
