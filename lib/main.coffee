@@ -34,6 +34,7 @@
 
 #Modal Component
 `import ModalComponent              from './modal/modal'`
+`import ModalFormComponent          from './modal/modal-form'`
 `import ModalTitleComponent         from './modal/modal-title'`
 `import ModalBodyComponent          from './modal/modal-body'`
 `import ModalFooterComponent        from './modal/modal-footer'`
@@ -144,6 +145,7 @@ Application.initializer
 
         #Modal
         c.register 'component:em-modal', ModalComponent
+        c.register 'component:em-modal-form', ModalFormComponent
         c.register 'component:em-modal-title', ModalTitleComponent
         c.register 'component:em-modal-body', ModalBodyComponent
         c.register 'component:em-modal-footer', ModalFooterComponent
@@ -158,4 +160,5 @@ Application.initializer
         AccordionComponent, AccordionItemComponent,
         TreeNodeComponent, TreeBranchComponent, TreeNode,
         ListComponent, ListItemComponent,
-        ModalComponent, ModalTitleComponent, ModalBodyComponent, ModalFooterComponent, ModalTogglerComponent, ModalConfirmComponent}`
+        ModalComponent, ModalTitleComponent, ModalBodyComponent, ModalFooterComponent, ModalTogglerComponent, ModalConfirmComponent, 
+            ModalFormComponent}`
