@@ -32,6 +32,16 @@
 `import ListComponent               from './list/list'`
 `import ListItemComponent           from './list/list-item'`
 
+#Modal Component
+`import ModalComponent              from './modal/modal'`
+`import ModalTitleComponent         from './modal/modal-title'`
+`import ModalBodyComponent          from './modal/modal-body'`
+`import ModalFooterComponent        from './modal/modal-footer'`
+`import ModalTogglerComponent       from './modal/modal-toggler'`
+`import ModalTmpl                   from './modal/modal-tmpl'`
+`import ModalConfirmComponent       from './modal/modal-confirm'`
+`import ModalConfirmTmpl            from './modal/modal-confirm-tmpl'`
+
 #General
 `import {Application, Namespace}    from 'ember';`
 
@@ -86,6 +96,11 @@ Application.initializer
                 panelTogglerClasses: ['accordion-toggle']
                 panelBodyContainerClasses: ['panel-collapse','collapse']
                 panelBodyClasses: ['panel-body']
+            modal:
+                classes: ['modal', 'fade']
+                bodyClasses: ['modal-body']
+                titleClasses: ['modal-header']
+                footerClasses: ['modal-footer']
         )
         Config.addConfig('foundation',
             tabs:
@@ -127,9 +142,20 @@ Application.initializer
         c.register 'component:em-list', ListComponent
         c.register 'component:em-list-item', ListItemComponent
 
+        #Modal
+        c.register 'component:em-modal', ModalComponent
+        c.register 'component:em-modal-title', ModalTitleComponent
+        c.register 'component:em-modal-body', ModalBodyComponent
+        c.register 'component:em-modal-footer', ModalFooterComponent
+        c.register 'component:em-modal-toggler', ModalTogglerComponent
+        c.register 'template:em-modal', ModalTmpl
+        c.register 'component:em-modal-confirm', ModalConfirmComponent
+        c.register 'template:em-modal-confirm', ModalConfirmTmpl
+
 
 `export {TabsComponent, TabListComponent, TabComponent, TabPanelComponent, 
         WysiwygComponent, WysiwygToolbarComponent, WysiwygActionGroupComponent, WysiwygActionComponent, WysiwygEditorComponent,
         AccordionComponent, AccordionItemComponent,
         TreeNodeComponent, TreeBranchComponent, TreeNode,
-        ListComponent, ListItemComponent}`
+        ListComponent, ListItemComponent,
+        ModalComponent, ModalTitleComponent, ModalBodyComponent, ModalFooterComponent, ModalTogglerComponent, ModalConfirmComponent}`
