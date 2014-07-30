@@ -21,12 +21,16 @@
 `import AccordionItemTmpl           from './accordion/accordion-item-tmpl';`
 
 #Tree Component
+`import TreeComponent               from './tree/tree'`
+`import TreeTmpl                    from './tree/tree-tmpl'`
+`import TreeStyle                   from './tree/tree-css'`
 `import TreeNode                    from './tree/node'`
 `import TreeNodeComponent           from './tree/tree-node'`
 `import TreeNodeTmpl                from './tree/tree-node-tmpl'`
+`import TreeNodeIconAction          from './tree/tree-node-icon-action'`
 `import TreeBranchComponent         from './tree/tree-branch'`
 `import TreeBranchTmpl              from './tree/tree-branch-tmpl'`
-`import TreeBranchStyle             from './tree/tree-branch-css'`
+
 
 #List Component
 `import ListComponent               from './list/list'`
@@ -60,6 +64,7 @@ Application.initializer
                 tabTag: ['li']
                 tabListTag: ['ul']
             tree:
+                classes: ['em-tree-branch', 'em-tree', 'fa-ul']
                 branchClasses: ['em-tree-branch', 'fa-ul']
                 nodeClasses: ['em-tree-node']
                 nodeOpenClasses: []
@@ -134,11 +139,14 @@ Application.initializer
         c.register 'template:em-accordion-item-tmpl', AccordionItemTmpl
 
         #Tree
+        c.register 'component:em-tree', TreeComponent
+        c.register 'template:em-tree', TreeTmpl
         c.register 'component:em-tree-node', TreeNodeComponent
         c.register 'template:em-tree-node', TreeNodeTmpl
+        c.register 'component:em-tree-node-icon-action', TreeNodeIconAction
         c.register 'component:em-tree-branch', TreeBranchComponent
         c.register 'template:em-tree-branch', TreeBranchTmpl
-        c.register 'template:components/em-tree-branch-css', TreeBranchStyle
+        c.register 'template:components/em-tree-css', TreeStyle
 
         #List
         c.register 'component:em-list', ListComponent
@@ -160,7 +168,7 @@ Application.initializer
 `export {TabsComponent, TabListComponent, TabComponent, TabPanelComponent, 
         WysiwygComponent, WysiwygToolbarComponent, WysiwygActionGroupComponent, WysiwygActionComponent, WysiwygEditorComponent,
         AccordionComponent, AccordionItemComponent,
-        TreeNodeComponent, TreeBranchComponent, TreeNode,
+        TreeComponent, TreeNodeComponent, TreeBranchComponent, TreeNode, TreeNodeIconAction,
         ListComponent, ListItemComponent,
         ModalComponent, ModalTitleComponent, ModalBodyComponent, ModalFooterComponent, ModalTogglerComponent, ModalConfirmComponent, 
             ModalFormComponent, ModalEmFormComponent}`

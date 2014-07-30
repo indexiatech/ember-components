@@ -11,20 +11,15 @@ WithConfigMixin = Em.Eu.WithConfigMixin
 ###
 TreeBranch = Component.extend WithConfigMixin,
     ###*
-    # The node to render its children within this branch
-    # this property is expected to be defined by the user
+    # The model to render its children within this branch
+    # this property is set during component markup creation
     ###
-    node: undefined
-
-    ###*
-    # The root node of the tree
-    ###
-    rootNode: computed.alias 'node.root'
+    model: undefined
 
     ###*
     # A list of {{#crossLink "TreeNode"}}nodes{{/crossLink}} instances.
     ###
-    nodes: computed.alias 'node.children'
+    children: computed.alias 'model.children'
 
     ###*
     # True if node's children should be loaded asynchronously

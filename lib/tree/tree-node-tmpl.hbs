@@ -4,8 +4,17 @@
     <a {{action toggle}} class="text">*</a>
 {{/if}}
 
-<span {{action select}} {{bind-attr class="nodeSelectedClasses"}}>{{node.title}}</span>
+<span {{action select}} {{bind-attr class="nodeSelectedClasses :title"}}>{{model.title}}
+</span>
+{{#if tree.hovered-actions}}
+    <span class="actions">
+    {{#each tree.hovered-actions}}
+        {{em-tree-node-icon-action meta=this}}</i>
+    {{/each}}
+    </span>
+{{/if}}
+
 
 {{#if expanded}}
-    {{em-tree-branch node=node async=async targetObject=targetObject}}
+    {{em-tree-branch model=model tree=tree async=async targetObject=targetObject}}
 {{/if}}

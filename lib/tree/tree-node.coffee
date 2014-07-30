@@ -1,5 +1,4 @@
 #(c) 2014 Indexia, Inc.
-
 `import {Component, ArrayProxy, computed} from 'ember';`
 #TODO: Import
 WithConfigMixin = Em.Eu.WithConfigMixin
@@ -11,38 +10,38 @@ WithConfigMixin = Em.Eu.WithConfigMixin
 ###
 TreeNode = Component.extend WithConfigMixin,
     ###*
-    # The node model the tree node view is bound to
+    # The model the tree node view is bound to
     ###
-    node: undefined
+    model: undefined
 
     ###*
-    # true if the node of this view is a root node
+    # A reference to the tree view, this property is auto set during component instantiation
     ###
-    isRootNode: computed.not 'node.hasParent'
+    tree: undefined
 
     ###*
-    # The root node model
+    # A reference to the root model
     ###
-    root: computed.alias 'node.root'
+    rootModel: computed.alias 'tree.model'
 
     ###*
     # True if the node is currently expanded, meaning its children are visible.
     ###
-    expanded: false
+    expanded: computed.alias 'model.expanded'
 
     ###*
-    # True if this node is currently checked
+    # True if this node view is currently checked
     # This is only relevant if the tree configured to support selection
     ###
-    checked: false
+    selected: false
 
     ###*
-    # True if should render an icon tag for this node
+    # True if should render an icon tag for this node view
     ###
     hasIcon: true
 
     ###*
-    # True if nodes can be selected
+    # True if this node can be selected
     ###
     selectable: true
 
@@ -50,8 +49,8 @@ TreeNode = Component.extend WithConfigMixin,
     # True if this node is currently selected
     ###
     isSelected: (->
-        @get('rootBranchView.selected') is @get('node')
-    ).property('rootBranchView.selected')
+        @get('tree.selected') is @get('model')
+    ).property('tree.selected')
 
     ###*
     # True if this node is currently loading,
@@ -68,26 +67,11 @@ TreeNode = Component.extend WithConfigMixin,
     async: computed.alias 'parentView.async'
 
     ###*
-    # Get the view of the root node
+    # true if this is a leaf node, meaning it has no children
     ###
-    rootNodeView: (->
-        return @ if @get('isRootNode')
-        view = @get('parentView')
-        while (view)
-            return view if view.get('isRootNode')
-            view = view.get('parentView')
-    ).property('node')
-
-    ###*
-    # The root branch view
-    ###
-    rootBranchView: (->
-        @get('rootNodeView.parentView')
-    ).property('rootNodeView')
-
     leaf: (->
-        @get('node.children.length') is 0
-    ).property('node.children.length')
+        not @get('model.children') or @get('model.children.length') is 0
+    ).property('model.children.length')
 
     tagName: 'li'
     layoutName: 'em-tree-node'
@@ -118,12 +102,12 @@ TreeNode = Component.extend WithConfigMixin,
                 icons = icons.concat @get('config.tree.nodeLoadingIconClasses')
             #We don't have a children yet, that means we need to load them async, we show 'closed' icon even though there may not be
             #any childs beneath this node, we may enhance this behavior by asking the user whether the item has children beneath it
-            else if not @get('node.children')
+            else if not @get('model.children')
                 icons = icons.concat @get('config.tree.nodeCloseIconClasses')
             #We have children loaded already
             else
                 #No children for this one, then this is a leaf
-                if @get('node.children.length') is 0
+                if @get('model.children.length') is 0
                     icons = icons.concat @get('config.tree.nodeLeafIconClasses')
                 else
                     #There are children
@@ -145,15 +129,15 @@ TreeNode = Component.extend WithConfigMixin,
     actions:
         toggle: ->
             #If already expanded then we only close
-            if @get('async') and not @get('expanded') and not @get('node.children')
+            if @get('async') and not @get('expanded') and not @get('model.children')
                 @set 'loading', true
-                @sendAction 'children', @get('node'), @
+                @sendAction 'children', @get('model'), @
             else
                 @toggleProperty 'expanded'
 
         select: ->
             return if not @get('selectable')
-            @set 'rootBranchView.selected', @get('node')
+            @set 'tree.selected', @get('model')
 
     children: 'getChildren'
 
