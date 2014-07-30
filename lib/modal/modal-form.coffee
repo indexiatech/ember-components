@@ -9,11 +9,11 @@ ModalForm = Modal.extend
     tagName: 'form'
     attributeBindings: ['in-async']
 
-    'in-async': undefined
+    'in-async': null
 
-    'close-if-error': true
+    'close-if-error': false
 
-    error: undefined
+    error: null
 
     ###*
     # Handle form submit event.
@@ -29,16 +29,20 @@ ModalForm = Modal.extend
         @sendAction 'on-submit', @, e
         if e.promise and "function" is typeof e.promise.then
             @set 'in-async', 'true'
-            e.promise.then(=>
-                @set 'in-async', undefined
+            e.promise.then((r) =>
+                @set 'in-async', null
                 @close()
             , (err) =>
-                @set 'in-async', undefined
+                @set 'in-async', null
                 @set 'error', err
                 @close() if @get('close-if-error')
             )
         else
             @close()
     ).on('submit')
+
+    close: ->
+        @set 'error', null
+        @_super.apply @, arguments
 
 `export default ModalForm`
