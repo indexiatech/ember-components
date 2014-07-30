@@ -6,7 +6,7 @@ WithConfigMixin = Em.Eu.WithConfigMixin
 
 Action = Component.extend WithConfigMixin,
     tagName: 'a'
-    templateName: 'em-wysiwyg-action'
+    layoutName: 'em-wysiwyg-action'
     classNameBindings: ['styleClasses', 'activeClasses']
     styleClasses: (->
         @get('config.wysiwyg.actionClasses')?.join(" ")

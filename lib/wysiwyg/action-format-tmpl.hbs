@@ -1,0 +1,17 @@
+{{#if icon}}
+    <i {{bind-attr class=icon}}></i>
+{{/if}}
+{{#if is-open}}
+
+  <ul style="display: block;" class="dropdown-menu" role="menu">
+    <li><a {{action 'heading' 'p'}} href="#">Normal</a></li>
+    <li><a {{action 'heading' 'blockquote'}} href="#">Quote</a></li>
+
+    <li class="divider"></li>
+
+    <li><a {{action 'heading' 'h1'}} href="#"><h1>Heading 1</h1></a></li>
+    <li><a {{action 'heading' 'h2'}} href="#"><h2>Heading 2</h2></a></li>
+    <li><a {{action 'heading' 'h3'}} href="#"><h3>Heading 3</h3></a></li>
+
+  </ul>
+{{/if}}
