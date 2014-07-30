@@ -120,11 +120,9 @@ AccordionItem = Component.extend WithConfigMixin,
     hide: ->
         $accordionBody = @$('.panel-collapse')
         $accordionBody.removeClass('in')
-        $accordionBody.height($accordionBody.height())[0].offsetHeight
 
     show: ->
         $accordionBody = @$('.panel-collapse')
         $accordionBody.addClass('in')
-        $accordionBody.height($accordionBody[0]['scrollHeight'])
 
 `export default AccordionItem;`
