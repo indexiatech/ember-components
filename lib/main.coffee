@@ -14,6 +14,8 @@
 `import WysiwygActionComponent      from './wysiwyg/action';`
 `import WysiwygActionTmpl           from './wysiwyg/actiontmpl';`
 `import WysiwygEditorComponent      from './wysiwyg/editor';`
+`import WysiwygActionLinkComponent  from './wysiwyg/action-link';`
+`import WysiwygActionLinkTmpl       from './wysiwyg/action-link-tmpl'`
 
 #Accordion Component
 `import AccordionComponent          from './accordion/accordion';`
@@ -126,6 +128,8 @@ Application.initializer
         c.register 'component:em-wysiwyg-action', WysiwygActionComponent
         c.register 'template:em-wysiwyg-action', WysiwygActionTmpl
         c.register 'component:em-wysiwyg-editor', WysiwygEditorComponent
+        c.register 'component:em-wysiwyg-action-link', WysiwygActionLinkComponent
+        c.register 'template:em-wysiwyg-action-link', WysiwygActionLinkTmpl
 
         #Accordion
         c.register 'component:em-accordion', AccordionComponent
@@ -157,6 +161,7 @@ Application.initializer
 
 `export {TabsComponent, TabListComponent, TabComponent, TabPanelComponent, 
         WysiwygComponent, WysiwygToolbarComponent, WysiwygActionGroupComponent, WysiwygActionComponent, WysiwygEditorComponent,
+            WysiwygActionLinkComponent, WysiwygActionLinkTmpl,
         AccordionComponent, AccordionItemComponent,
         TreeNodeComponent, TreeBranchComponent, TreeNode,
         ListComponent, ListItemComponent,
