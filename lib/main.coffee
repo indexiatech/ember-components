@@ -38,6 +38,7 @@
 
 #Modal Component
 `import ModalComponent              from './modal/modal'`
+`import ModalCss                    from './modal/modal-css'`
 `import ModalFormComponent          from './modal/modal-form'`
 `import ModalEmFormComponent        from './modal/modal-emform'`
 `import ModalTitleComponent         from './modal/modal-title'`
@@ -108,7 +109,7 @@ Application.initializer
                 panelBodyContainerClasses: ['panel-collapse','collapse']
                 panelBodyClasses: ['panel-body']
             modal:
-                classes: ['modal', 'fade']
+                classes: ['em-modal', 'modal', 'fade']
                 bodyClasses: ['modal-body']
                 titleClasses: ['modal-header']
                 footerClasses: ['modal-footer']
@@ -158,6 +159,7 @@ Application.initializer
 
         #Modal
         c.register 'component:em-modal', ModalComponent
+        c.register 'template:components/em-modal-css', ModalCss
         c.register 'component:em-modal-form', ModalFormComponent
         c.register 'component:em-modal-emform', ModalEmFormComponent
         c.register 'component:em-modal-title', ModalTitleComponent

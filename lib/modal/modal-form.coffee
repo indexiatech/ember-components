@@ -13,6 +13,8 @@ ModalForm = Modal.extend
 
     'close-if-error': false
 
+    submitted: false
+
     error: null
 
     ###*
@@ -27,6 +29,7 @@ ModalForm = Modal.extend
     submitForm: ((e) ->
         e.preventDefault()
         @sendAction 'on-submit', @, e
+        @set 'submitted', true
         if e.promise and "function" is typeof e.promise.then
             @set 'in-async', 'true'
             e.promise.then((r) =>
@@ -43,6 +46,8 @@ ModalForm = Modal.extend
 
     close: ->
         @set 'error', null
+        if not @get('submitted')
+            @sendAction 'on-cancel', @
         @_super.apply @, arguments
 
 `export default ModalForm`
