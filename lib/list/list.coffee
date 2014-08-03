@@ -15,6 +15,8 @@ WithConfigMixin = Em.Eu.WithConfigMixin
 List = Component.extend WithConfigMixin, 
     tagName: 'ul'
 
+    attributeBindings: ['style']
+
     classNameBindings: ['styleClasses']
     styleClasses: (->
         @get('config.list.listClasses')?.join(" ")
@@ -27,6 +29,11 @@ List = Component.extend WithConfigMixin,
     # @type Item
     ###
     selected: undefined
+
+    ###*
+    # True if this list supports selection
+    ###
+    selection: true
 
     ###*
     # List can be bound to models, models can be a property or an object that the list is bound to.
@@ -85,20 +92,24 @@ List = Component.extend WithConfigMixin,
     # @see selected-idx
     ###
     select: (item) ->
-        #TODO: Why we initially having an undefined item?
-        return if not item or @get('selected') is item
-        Em.debug "Selecting tab: #{item.get('index')}"
-        #the if condition is because the user may pass another object initially to bind the selected property
-        @get('selected').sendAction 'on-deselect', @get('selected') if @get('selected')?.sendAction
-        @set 'selected', item
-        @get('selected').sendAction 'on-select', @get('selected')
-        @set 'selected-idx', item.get 'index'
-
-        @get('items').forEach((i) =>
-            return if @get('selected') is i
-            i.sendAction 'on-selection-change', i, @get('selected')
-        )
-
+        #Handle no selection state
+        if not @get('selection')
+            item.sendAction 'on-click', item
+        else
+            #TODO: Why we initially having an undefined item?
+            return if not item or @get('selected') is item
+            Em.debug "Selecting tab: #{item.get('index')}"
+            #the if condition is because the user may pass another object initially to bind the selected property
+            @get('selected').sendAction 'on-deselect', @get('selected') if @get('selected')?.sendAction
+            @set 'selected', item
+            @get('selected').sendAction 'on-select', @get('selected')
+            @set 'selected-idx', item.get 'index'
+    
+            @get('items').forEach((i) =>
+                return if @get('selected') is i
+                i.sendAction 'on-selection-change', i, @get('selected')
+            )
+    
     notifyModelsChange: (->
         run.next(@, ->
             #Why this causes the models observer to stop notifying for changes?
