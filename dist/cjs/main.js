@@ -27,14 +27,30 @@ var AccordionItemComponent = require("./accordion/accordion-item")["default"] ||
 
 var AccordionItemTmpl = require("./accordion/accordion-item-tmpl")["default"] || require("./accordion/accordion-item-tmpl");
 
+var TreeComponent = require("./tree/tree")["default"] || require("./tree/tree");
+var TreeTmpl = require("./tree/tree-tmpl")["default"] || require("./tree/tree-tmpl");
+var TreeStyle = require("./tree/tree-css")["default"] || require("./tree/tree-css");
 var TreeNode = require("./tree/node")["default"] || require("./tree/node");
 var TreeNodeComponent = require("./tree/tree-node")["default"] || require("./tree/tree-node");
 var TreeNodeTmpl = require("./tree/tree-node-tmpl")["default"] || require("./tree/tree-node-tmpl");
+var TreeNodeIconAction = require("./tree/tree-node-icon-action")["default"] || require("./tree/tree-node-icon-action");
 var TreeBranchComponent = require("./tree/tree-branch")["default"] || require("./tree/tree-branch");
 var TreeBranchTmpl = require("./tree/tree-branch-tmpl")["default"] || require("./tree/tree-branch-tmpl");
-var TreeBranchStyle = require("./tree/tree-branch-css")["default"] || require("./tree/tree-branch-css");
 var ListComponent = require("./list/list")["default"] || require("./list/list");
 var ListItemComponent = require("./list/list-item")["default"] || require("./list/list-item");
+var ModalComponent = require("./modal/modal")["default"] || require("./modal/modal");
+var ModalCss = require("./modal/modal-css")["default"] || require("./modal/modal-css");
+var ModalFormComponent = require("./modal/modal-form")["default"] || require("./modal/modal-form");
+var ModalEmFormComponent = require("./modal/modal-emform")["default"] || require("./modal/modal-emform");
+var ModalTitleComponent = require("./modal/modal-title")["default"] || require("./modal/modal-title");
+var ModalBodyComponent = require("./modal/modal-body")["default"] || require("./modal/modal-body");
+var ModalFooterComponent = require("./modal/modal-footer")["default"] || require("./modal/modal-footer");
+var ModalTogglerComponent = require("./modal/modal-toggler")["default"] || require("./modal/modal-toggler");
+var ModalTmpl = require("./modal/modal-tmpl")["default"] || require("./modal/modal-tmpl");
+var ModalConfirmComponent = require("./modal/modal-confirm")["default"] || require("./modal/modal-confirm");
+var ModalConfirmTmpl = require("./modal/modal-confirm-tmpl")["default"] || require("./modal/modal-confirm-tmpl");
+var ButtonComponent = require("./button/button")["default"] || require("./button/button");
+var ButtonTmplComponent = require("./button/button-tmpl")["default"] || require("./button/button-tmpl");
 var Application = require("ember").Application;
 var Namespace = require("ember").Namespace;
 
@@ -53,6 +69,7 @@ Application.initializer({
         tabListTag: ['ul']
       },
       tree: {
+        classes: ['em-tree-branch', 'em-tree', 'fa-ul'],
         branchClasses: ['em-tree-branch', 'fa-ul'],
         nodeClasses: ['em-tree-node'],
         nodeOpenClasses: [],
@@ -94,6 +111,12 @@ Application.initializer({
         panelTogglerClasses: ['accordion-toggle'],
         panelBodyContainerClasses: ['panel-collapse', 'collapse'],
         panelBodyClasses: ['panel-body']
+      },
+      modal: {
+        classes: ['em-modal', 'modal', 'fade'],
+        bodyClasses: ['modal-body'],
+        titleClasses: ['modal-header'],
+        footerClasses: ['modal-footer']
       }
     });
     Config.addConfig('foundation', {
@@ -119,13 +142,29 @@ Application.initializer({
     c.register('component:em-accordion', AccordionComponent);
     c.register('component:em-accordion-item', AccordionItemComponent);
     c.register('template:em-accordion-item-tmpl', AccordionItemTmpl);
+    c.register('component:em-tree', TreeComponent);
+    c.register('template:em-tree', TreeTmpl);
     c.register('component:em-tree-node', TreeNodeComponent);
     c.register('template:em-tree-node', TreeNodeTmpl);
+    c.register('component:em-tree-node-icon-action', TreeNodeIconAction);
     c.register('component:em-tree-branch', TreeBranchComponent);
     c.register('template:em-tree-branch', TreeBranchTmpl);
-    c.register('template:components/em-tree-branch-css', TreeBranchStyle);
+    c.register('template:components/em-tree-css', TreeStyle);
     c.register('component:em-list', ListComponent);
-    return c.register('component:em-list-item', ListItemComponent);
+    c.register('component:em-list-item', ListItemComponent);
+    c.register('component:em-modal', ModalComponent);
+    c.register('template:components/em-modal-css', ModalCss);
+    c.register('component:em-modal-form', ModalFormComponent);
+    c.register('component:em-modal-emform', ModalEmFormComponent);
+    c.register('component:em-modal-title', ModalTitleComponent);
+    c.register('component:em-modal-body', ModalBodyComponent);
+    c.register('component:em-modal-footer', ModalFooterComponent);
+    c.register('component:em-modal-toggler', ModalTogglerComponent);
+    c.register('template:em-modal', ModalTmpl);
+    c.register('component:em-modal-confirm', ModalConfirmComponent);
+    c.register('template:em-modal-confirm', ModalConfirmTmpl);
+    c.register('component:em-button', ButtonComponent);
+    return c.register('template:em-button', ButtonTmplComponent);
   }
 });
 
@@ -140,8 +179,19 @@ exports.WysiwygActionComponent = WysiwygActionComponent;
 exports.WysiwygEditorComponent = WysiwygEditorComponent;
 exports.AccordionComponent = AccordionComponent;
 exports.AccordionItemComponent = AccordionItemComponent;
+exports.TreeComponent = TreeComponent;
 exports.TreeNodeComponent = TreeNodeComponent;
 exports.TreeBranchComponent = TreeBranchComponent;
 exports.TreeNode = TreeNode;
+exports.TreeNodeIconAction = TreeNodeIconAction;
 exports.ListComponent = ListComponent;
 exports.ListItemComponent = ListItemComponent;
+exports.ModalComponent = ModalComponent;
+exports.ModalTitleComponent = ModalTitleComponent;
+exports.ModalBodyComponent = ModalBodyComponent;
+exports.ModalFooterComponent = ModalFooterComponent;
+exports.ModalTogglerComponent = ModalTogglerComponent;
+exports.ModalConfirmComponent = ModalConfirmComponent;
+exports.ModalFormComponent = ModalFormComponent;
+exports.ModalEmFormComponent = ModalEmFormComponent;
+exports.ButtonComponent = ButtonComponent;

@@ -1,6 +1,6 @@
 "use strict";
 var Ember = require("ember")["default"] || require("ember");
-var Node;
+var Node, findChildrenOfNodeBy;
 
 Node = Ember.Object.extend({
   children: void 0,
@@ -61,7 +61,29 @@ Node = Ember.Object.extend({
   }).property('children.length'),
   isLevel1: (function() {
     return this.get('level') === 0;
-  }).property('children.length')
+  }).property('children.length'),
+  findChildBy: function(key, name) {
+    return findChildrenOfNodeBy(this, key, name);
+  }
 });
 
 exports["default"] = Node;
+
+findChildrenOfNodeBy = function(currChild, key, value) {
+  var c, _i, _len, _ref, _ref1;
+  if (currChild.get(key) === value) {
+    return currChild;
+  } else if (((_ref = currChild.get('children')) != null ? _ref.length : void 0) > 0) {
+    _ref1 = currChild.get('children');
+    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+      c = _ref1[_i];
+      if (c.get(key) === value) {
+        return c;
+      } else {
+        findChildrenOfNodeBy(c, key, value);
+      }
+    }
+    return null;
+  }
+  return null;
+};

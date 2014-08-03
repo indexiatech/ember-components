@@ -1,2 +1,2 @@
 "use strict";
-exports["default"] = Ember.Handlebars.compile("{{#each nodes}}\n    {{em-tree-node node=this async=controller.async targetObject=controller.targetObject}}\n{{/each}}");
+exports["default"] = Ember.Handlebars.compile("{{#each children}}\n    {{em-tree-node model=this tree=view.tree async=controller.async targetObject=controller.targetObject}}\n{{/each}}");

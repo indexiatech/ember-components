@@ -134,14 +134,12 @@ AccordionItem = Component.extend(WithConfigMixin, {
   hide: function() {
     var $accordionBody;
     $accordionBody = this.$('.panel-collapse');
-    $accordionBody.removeClass('in');
-    return $accordionBody.height($accordionBody.height())[0].offsetHeight;
+    return $accordionBody.removeClass('in');
   },
   show: function() {
     var $accordionBody;
     $accordionBody = this.$('.panel-collapse');
-    $accordionBody.addClass('in');
-    return $accordionBody.height($accordionBody[0]['scrollHeight']);
+    return $accordionBody.addClass('in');
   }
 });
 
@@ -213,6 +211,157 @@ Accordion = Component.extend(WithConfigMixin, {
 
 exports["default"] = Accordion;;
 },{}],4:[function(_dereq_,module,exports){
+"use strict";
+exports["default"] = Ember.Handlebars.compile("{{#if icon-classes}}\n    <i {{bind-attr class=\'icon-classes\'}}></i>\n{{/if}}\n{{label}}");
+},{}],5:[function(_dereq_,module,exports){
+"use strict";
+var Component = window.Ember.Component;
+var ArrayProxy = window.Ember.ArrayProxy;
+var computed = window.Ember.computed;
+
+var Button, WithConfigMixin;
+
+WithConfigMixin = Em.Eu.WithConfigMixin;
+
+
+/**
+ * Button component
+ * 
+ * Styled button with async support.
+ *
+ * @class Button
+ */
+
+Button = Component.extend(WithConfigMixin, {
+
+  /**
+   * The tag name the component is rendered as.
+   * This theoretically can be a div or anything else.
+   * @property tagName
+   * @private
+   */
+  tagName: 'button',
+
+  /**
+   * The template of the component
+   * @property layoutName
+   * @private
+   */
+  layoutName: 'em-button',
+
+  /**
+   * Bind the specified properties as DOM attributes.
+   * @property attributeBindings
+   * @private
+   */
+  attributeBindings: ['disabled', 'state'],
+
+  /**
+   * Bind the specified properties as the classes of the DOM element.
+   */
+  classNameBindings: ['class'],
+
+  /**
+   * True if the button is disabled and cannot be clicked.
+   * @property disabled
+   * @public
+   */
+  disabled: computed.equal('state', 'executing'),
+
+  /**
+   * The state of the button, can be one of the following:
+   * default - The button is enabled and ready to be clicked.
+   * executing - The promise bound to the button was sent and the promise is still executing
+   * resolved - The promise was resolved properly.
+   * rejected - The promise bound to the button was finished as rejected.
+   *
+   * The state is also bound to the DOM as `state` property, this allows to easily change styles for every
+   * state by using `.em-button[state=resolved]` syntax.
+   *
+   * The label of the button will change to the value of the component properties that correspond to the 
+   * states mentioned above.
+   *
+   * @property state
+   * @private
+   */
+  state: 'default',
+
+  /**
+   * The action name to invoke on the controller when the button is clicked.
+   * @property on-click
+   * @public
+   */
+  'on-click': void 0,
+
+  /**
+   * If set, an icon tag will be added as apart of the button and the given value here will be set
+   * as the icon's `class` attribute.
+   * @property icon-classes
+   * @public
+   */
+  'icon-classes': (function() {
+    var propName;
+    propName = "icon-" + this.state;
+    return this.getWithDefault(propName, this.get('icon-default'));
+  }).property('state', 'icon-default', 'icon-executing', 'icon-resolved', 'icon-rejected'),
+
+  /*
+   * The label of the button, calculated according to the state of the button
+   * See the `state` property documentation for more info.
+   * @property label
+   * @private
+   */
+  label: (function() {
+    return this.getWithDefault(this.state, this.get('default'));
+  }).property('state', 'default', 'executing', 'resolved', 'rejected'),
+
+  /**
+   * Set by the `onClick` callback, if set, the promise will be observed and the button's state will be
+   * changed accordingly.
+   * @property promise
+   * @private
+   */
+  promise: void 0,
+
+  /**
+   * Triggered when the button is clicked
+   * Invoke the action name on the controller defined in the `action` property, default is `onClick`.
+   * The action on the controller recieves a property that should be set to the promise being invoked (if there is one)
+   * If a promise was set, the button will move to 'executing' state until the promise will be resolved
+   * @method onClick
+   * @private
+   */
+  onClick: (function() {
+    this.sendAction('on-click', (function(_this) {
+      return function(promise) {
+        _this.set('promise', promise);
+        return _this.set('state', 'executing');
+      };
+    })(this));
+    return false;
+  }).on('click'),
+
+  /*
+   * Observes the promise property 
+   * @property changeStateByPromise
+   * @private
+   */
+  changeStateByPromise: (function() {
+    return this.get('promise').then((function(_this) {
+      return function() {
+        return _this.set('state', 'resolved');
+      };
+    })(this), (function(_this) {
+      return function(err) {
+        _this.set('state', 'rejected');
+        return _this.set('error', err);
+      };
+    })(this));
+  }).observes('promise')
+});
+
+exports["default"] = Button;
+},{}],6:[function(_dereq_,module,exports){
 "use strict";
 var Mixin = window.Ember.Mixin;
 
@@ -321,7 +470,7 @@ AsItem = Mixin.create({
 });
 
 exports["default"] = AsItem;
-},{}],5:[function(_dereq_,module,exports){
+},{}],7:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var computed = window.Ember.computed;
@@ -358,7 +507,7 @@ ListItem = Component.extend(WithConfigMixin, AsListMixin, {
 });
 
 exports["default"] = ListItem;;
-},{"./as-item":4}],6:[function(_dereq_,module,exports){
+},{"./as-item":6}],8:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var ArrayProxy = window.Ember.ArrayProxy;
@@ -380,6 +529,7 @@ WithConfigMixin = Em.Eu.WithConfigMixin;
 
 List = Component.extend(WithConfigMixin, {
   tagName: 'ul',
+  attributeBindings: ['style'],
   classNameBindings: ['styleClasses'],
   styleClasses: (function() {
     var _ref;
@@ -393,6 +543,11 @@ List = Component.extend(WithConfigMixin, {
    * @type Item
    */
   selected: void 0,
+
+  /**
+   * True if this list supports selection
+   */
+  selection: true,
 
   /**
    * List can be bound to models, models can be a property or an object that the list is bound to.
@@ -455,24 +610,28 @@ List = Component.extend(WithConfigMixin, {
    */
   select: function(item) {
     var _ref;
-    if (!item || this.get('selected') === item) {
-      return;
+    if (!this.get('selection')) {
+      return item.sendAction('on-click', item);
+    } else {
+      if (!item || this.get('selected') === item) {
+        return;
+      }
+      Em.debug("Selecting tab: " + (item.get('index')));
+      if ((_ref = this.get('selected')) != null ? _ref.sendAction : void 0) {
+        this.get('selected').sendAction('on-deselect', this.get('selected'));
+      }
+      this.set('selected', item);
+      this.get('selected').sendAction('on-select', this.get('selected'));
+      this.set('selected-idx', item.get('index'));
+      return this.get('items').forEach((function(_this) {
+        return function(i) {
+          if (_this.get('selected') === i) {
+            return;
+          }
+          return i.sendAction('on-selection-change', i, _this.get('selected'));
+        };
+      })(this));
     }
-    Em.debug("Selecting tab: " + (item.get('index')));
-    if ((_ref = this.get('selected')) != null ? _ref.sendAction : void 0) {
-      this.get('selected').sendAction('on-deselect', this.get('selected'));
-    }
-    this.set('selected', item);
-    this.get('selected').sendAction('on-select', this.get('selected'));
-    this.set('selected-idx', item.get('index'));
-    return this.get('items').forEach((function(_this) {
-      return function(i) {
-        if (_this.get('selected') === i) {
-          return;
-        }
-        return i.sendAction('on-selection-change', i, _this.get('selected'));
-      };
-    })(this));
   },
   notifyModelsChange: (function() {
     return run.next(this, function() {
@@ -493,7 +652,7 @@ List = Component.extend(WithConfigMixin, {
 });
 
 exports["default"] = List;
-},{}],7:[function(_dereq_,module,exports){
+},{}],9:[function(_dereq_,module,exports){
 "use strict";
 var TabsComponent = _dereq_("./tabs/tabs")["default"] || _dereq_("./tabs/tabs");
 
@@ -523,14 +682,30 @@ var AccordionItemComponent = _dereq_("./accordion/accordion-item")["default"] ||
 
 var AccordionItemTmpl = _dereq_("./accordion/accordion-item-tmpl")["default"] || _dereq_("./accordion/accordion-item-tmpl");
 
+var TreeComponent = _dereq_("./tree/tree")["default"] || _dereq_("./tree/tree");
+var TreeTmpl = _dereq_("./tree/tree-tmpl")["default"] || _dereq_("./tree/tree-tmpl");
+var TreeStyle = _dereq_("./tree/tree-css")["default"] || _dereq_("./tree/tree-css");
 var TreeNode = _dereq_("./tree/node")["default"] || _dereq_("./tree/node");
 var TreeNodeComponent = _dereq_("./tree/tree-node")["default"] || _dereq_("./tree/tree-node");
 var TreeNodeTmpl = _dereq_("./tree/tree-node-tmpl")["default"] || _dereq_("./tree/tree-node-tmpl");
+var TreeNodeIconAction = _dereq_("./tree/tree-node-icon-action")["default"] || _dereq_("./tree/tree-node-icon-action");
 var TreeBranchComponent = _dereq_("./tree/tree-branch")["default"] || _dereq_("./tree/tree-branch");
 var TreeBranchTmpl = _dereq_("./tree/tree-branch-tmpl")["default"] || _dereq_("./tree/tree-branch-tmpl");
-var TreeBranchStyle = _dereq_("./tree/tree-branch-css")["default"] || _dereq_("./tree/tree-branch-css");
 var ListComponent = _dereq_("./list/list")["default"] || _dereq_("./list/list");
 var ListItemComponent = _dereq_("./list/list-item")["default"] || _dereq_("./list/list-item");
+var ModalComponent = _dereq_("./modal/modal")["default"] || _dereq_("./modal/modal");
+var ModalCss = _dereq_("./modal/modal-css")["default"] || _dereq_("./modal/modal-css");
+var ModalFormComponent = _dereq_("./modal/modal-form")["default"] || _dereq_("./modal/modal-form");
+var ModalEmFormComponent = _dereq_("./modal/modal-emform")["default"] || _dereq_("./modal/modal-emform");
+var ModalTitleComponent = _dereq_("./modal/modal-title")["default"] || _dereq_("./modal/modal-title");
+var ModalBodyComponent = _dereq_("./modal/modal-body")["default"] || _dereq_("./modal/modal-body");
+var ModalFooterComponent = _dereq_("./modal/modal-footer")["default"] || _dereq_("./modal/modal-footer");
+var ModalTogglerComponent = _dereq_("./modal/modal-toggler")["default"] || _dereq_("./modal/modal-toggler");
+var ModalTmpl = _dereq_("./modal/modal-tmpl")["default"] || _dereq_("./modal/modal-tmpl");
+var ModalConfirmComponent = _dereq_("./modal/modal-confirm")["default"] || _dereq_("./modal/modal-confirm");
+var ModalConfirmTmpl = _dereq_("./modal/modal-confirm-tmpl")["default"] || _dereq_("./modal/modal-confirm-tmpl");
+var ButtonComponent = _dereq_("./button/button")["default"] || _dereq_("./button/button");
+var ButtonTmplComponent = _dereq_("./button/button-tmpl")["default"] || _dereq_("./button/button-tmpl");
 var Application = window.Ember.Application;
 var Namespace = window.Ember.Namespace;
 
@@ -549,6 +724,7 @@ Application.initializer({
         tabListTag: ['ul']
       },
       tree: {
+        classes: ['em-tree-branch', 'em-tree', 'fa-ul'],
         branchClasses: ['em-tree-branch', 'fa-ul'],
         nodeClasses: ['em-tree-node'],
         nodeOpenClasses: [],
@@ -590,6 +766,12 @@ Application.initializer({
         panelTogglerClasses: ['accordion-toggle'],
         panelBodyContainerClasses: ['panel-collapse', 'collapse'],
         panelBodyClasses: ['panel-body']
+      },
+      modal: {
+        classes: ['em-modal', 'modal', 'fade'],
+        bodyClasses: ['modal-body'],
+        titleClasses: ['modal-header'],
+        footerClasses: ['modal-footer']
       }
     });
     Config.addConfig('foundation', {
@@ -615,13 +797,29 @@ Application.initializer({
     c.register('component:em-accordion', AccordionComponent);
     c.register('component:em-accordion-item', AccordionItemComponent);
     c.register('template:em-accordion-item-tmpl', AccordionItemTmpl);
+    c.register('component:em-tree', TreeComponent);
+    c.register('template:em-tree', TreeTmpl);
     c.register('component:em-tree-node', TreeNodeComponent);
     c.register('template:em-tree-node', TreeNodeTmpl);
+    c.register('component:em-tree-node-icon-action', TreeNodeIconAction);
     c.register('component:em-tree-branch', TreeBranchComponent);
     c.register('template:em-tree-branch', TreeBranchTmpl);
-    c.register('template:components/em-tree-branch-css', TreeBranchStyle);
+    c.register('template:components/em-tree-css', TreeStyle);
     c.register('component:em-list', ListComponent);
-    return c.register('component:em-list-item', ListItemComponent);
+    c.register('component:em-list-item', ListItemComponent);
+    c.register('component:em-modal', ModalComponent);
+    c.register('template:components/em-modal-css', ModalCss);
+    c.register('component:em-modal-form', ModalFormComponent);
+    c.register('component:em-modal-emform', ModalEmFormComponent);
+    c.register('component:em-modal-title', ModalTitleComponent);
+    c.register('component:em-modal-body', ModalBodyComponent);
+    c.register('component:em-modal-footer', ModalFooterComponent);
+    c.register('component:em-modal-toggler', ModalTogglerComponent);
+    c.register('template:em-modal', ModalTmpl);
+    c.register('component:em-modal-confirm', ModalConfirmComponent);
+    c.register('template:em-modal-confirm', ModalConfirmTmpl);
+    c.register('component:em-button', ButtonComponent);
+    return c.register('template:em-button', ButtonTmplComponent);
   }
 });
 
@@ -636,12 +834,642 @@ exports.WysiwygActionComponent = WysiwygActionComponent;
 exports.WysiwygEditorComponent = WysiwygEditorComponent;
 exports.AccordionComponent = AccordionComponent;
 exports.AccordionItemComponent = AccordionItemComponent;
+exports.TreeComponent = TreeComponent;
 exports.TreeNodeComponent = TreeNodeComponent;
 exports.TreeBranchComponent = TreeBranchComponent;
 exports.TreeNode = TreeNode;
+exports.TreeNodeIconAction = TreeNodeIconAction;
 exports.ListComponent = ListComponent;
 exports.ListItemComponent = ListItemComponent;
-},{"./accordion/accordion":3,"./accordion/accordion-item":2,"./accordion/accordion-item-tmpl":1,"./list/list":6,"./list/list-item":5,"./tabs/tab":10,"./tabs/tab-list":8,"./tabs/tab-panel":9,"./tabs/tabs":12,"./tabs/tabs-css":11,"./tree/node":13,"./tree/tree-branch":16,"./tree/tree-branch-css":14,"./tree/tree-branch-tmpl":15,"./tree/tree-node":18,"./tree/tree-node-tmpl":17,"./wysiwyg/action":20,"./wysiwyg/action-group":19,"./wysiwyg/actiontmpl":21,"./wysiwyg/editor":22,"./wysiwyg/toolbar":23,"./wysiwyg/wysiwyg":24}],8:[function(_dereq_,module,exports){
+exports.ModalComponent = ModalComponent;
+exports.ModalTitleComponent = ModalTitleComponent;
+exports.ModalBodyComponent = ModalBodyComponent;
+exports.ModalFooterComponent = ModalFooterComponent;
+exports.ModalTogglerComponent = ModalTogglerComponent;
+exports.ModalConfirmComponent = ModalConfirmComponent;
+exports.ModalFormComponent = ModalFormComponent;
+exports.ModalEmFormComponent = ModalEmFormComponent;
+exports.ButtonComponent = ButtonComponent;
+},{"./accordion/accordion":3,"./accordion/accordion-item":2,"./accordion/accordion-item-tmpl":1,"./button/button":5,"./button/button-tmpl":4,"./list/list":8,"./list/list-item":7,"./modal/modal":20,"./modal/modal-body":10,"./modal/modal-confirm":12,"./modal/modal-confirm-tmpl":11,"./modal/modal-css":13,"./modal/modal-emform":14,"./modal/modal-footer":15,"./modal/modal-form":16,"./modal/modal-title":17,"./modal/modal-tmpl":18,"./modal/modal-toggler":19,"./tabs/tab":23,"./tabs/tab-list":21,"./tabs/tab-panel":22,"./tabs/tabs":25,"./tabs/tabs-css":24,"./tree/node":26,"./tree/tree":34,"./tree/tree-branch":28,"./tree/tree-branch-tmpl":27,"./tree/tree-css":29,"./tree/tree-node":32,"./tree/tree-node-icon-action":30,"./tree/tree-node-tmpl":31,"./tree/tree-tmpl":33,"./wysiwyg/action":36,"./wysiwyg/action-group":35,"./wysiwyg/actiontmpl":37,"./wysiwyg/editor":38,"./wysiwyg/toolbar":39,"./wysiwyg/wysiwyg":40}],10:[function(_dereq_,module,exports){
+"use strict";
+var Component = window.Ember.Component;
+var ArrayProxy = window.Ember.ArrayProxy;
+var run = window.Ember.run;
+
+var ModalBody, StyleBindingsMixin, WithConfigMixin;
+
+WithConfigMixin = Em.Eu.WithConfigMixin;
+
+StyleBindingsMixin = Em.Eu.StyleBindingsMixin;
+
+
+/**
+ * `{{em-modal-body}}` component.
+ *
+ * The body of the modal
+ *
+ * @class ModalBody
+ * @public
+ */
+
+ModalBody = Component.extend(WithConfigMixin, StyleBindingsMixin, {
+  classNameBindings: ['styleClasses'],
+
+  /**
+   * The CSS classes that will be attached to the DOM element of the modal
+   * Classes should be configured externally by using the `config` object.
+   *
+   * @property styleClasses
+   * @private
+   * @type String
+   */
+  styleClasses: (function() {
+    var _ref;
+    return (_ref = this.get('config.modal.bodyClasses')) != null ? _ref.join(" ") : void 0;
+  }).property()
+});
+
+exports["default"] = ModalBody;
+},{}],11:[function(_dereq_,module,exports){
+"use strict";
+exports["default"] = Ember.Handlebars.compile("{{#em-modal id=confirm-id configName=configName model-id=model-id open-if=open-if close-if=close-if}}\n    {{#em-modal-title}}\n        {{#em-modal-toggler class=\"close\"}}<span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span>{{/em-modal-toggler}}\n        <h4 class=\"modal-title\">{{title}}</h4>\n    {{/em-modal-title}}\n    {{#em-modal-body}}\n        {{message}}\n    {{/em-modal-body}}\n    {{#em-modal-footer}}\n        <button type=\"button\" class=\"btn btn-primary\" {{action \"confirmPressed\"}}>Yes</button>\n        {{#em-modal-toggler class=\"btn btn-default\"}}No{{/em-modal-toggler}}\n    {{/em-modal-footer}}\n{{/em-modal}}");
+},{}],12:[function(_dereq_,module,exports){
+"use strict";
+var Component = window.Ember.Component;
+var ArrayProxy = window.Ember.ArrayProxy;
+var run = window.Ember.run;
+
+
+/**
+ * A confirmation modal with 'Yes' & 'No' buttons
+ * When 'no' is pressed the modal is just closed.
+ * When 'yes' is pressed an action bound to the action on the controller set in the `confirm` property is invoked, 
+ * giving the controller a chance to decide whether to close the modal or not.
+ *
+ * @class ModalConfirm
+ */
+var ModalConfirm;
+
+ModalConfirm = Component.extend({
+  layoutName: 'em-modal-confirm',
+
+  /**
+   * Bound to the action on the controller to be invoked when the 'yes' button is pressed.
+   * @property confirm
+   * @public
+   */
+  confirm: "confirm",
+
+  /**
+   * The default title of the modal if not set otherwise.
+   *
+   * @property title
+   * @public
+   */
+  title: 'Please confirm',
+
+  /**
+   * The default message of the modal if not set otherwise.
+   *
+   * @property message
+   * @public
+   */
+  message: 'Please press Yes to confirm the operation.',
+  actions: {
+
+    /**
+     * Invoked when the user clicks the "Yes" button, triggers an action on the controller.
+     * 
+     * @method confirmPressed
+     * @private
+     */
+    confirmPressed: function() {
+      return this.sendAction('confirm');
+    }
+  }
+});
+
+exports["default"] = ModalConfirm;
+},{}],13:[function(_dereq_,module,exports){
+"use strict";
+exports["default"] = Ember.Handlebars.compile(".em-modal {\n    background-color: hsla(0, 0%, 100%, .85);\n}");
+},{}],14:[function(_dereq_,module,exports){
+"use strict";
+var Component = window.Ember.Component;
+var ArrayProxy = window.Ember.ArrayProxy;
+var run = window.Ember.run;
+
+var FormModal = _dereq_("./modal-form")["default"] || _dereq_("./modal-form");
+var EmModalForm;
+
+EmModalForm = FormModal.extend({
+  classNameBindings: ['form'],
+  attributeBindings: ['role'],
+  role: 'form',
+  model: void 0,
+  submit_button: false
+});
+
+exports["default"] = EmModalForm;
+},{"./modal-form":16}],15:[function(_dereq_,module,exports){
+"use strict";
+var Component = window.Ember.Component;
+var ArrayProxy = window.Ember.ArrayProxy;
+var run = window.Ember.run;
+
+var ModalFooter, StyleBindingsMixin, WithConfigMixin;
+
+WithConfigMixin = Em.Eu.WithConfigMixin;
+
+StyleBindingsMixin = Em.Eu.StyleBindingsMixin;
+
+
+/**
+ * `{{em-modal-footer}}` component.
+ *
+ * The footer of the modal
+ *
+ * @class ModalFooter
+ * @public
+ */
+
+ModalFooter = Component.extend(WithConfigMixin, StyleBindingsMixin, {
+  classNameBindings: ['styleClasses'],
+
+  /**
+   * The CSS classes that will be attached to the DOM element of the modal
+   * Classes should be configured externally by using the `config` object.
+   *
+   * @property styleClasses
+   * @private
+   * @type String
+   */
+  styleClasses: (function() {
+    var _ref;
+    return (_ref = this.get('config.modal.footerClasses')) != null ? _ref.join(" ") : void 0;
+  }).property()
+});
+
+exports["default"] = ModalFooter;
+},{}],16:[function(_dereq_,module,exports){
+"use strict";
+var ArrayProxy = window.Ember.ArrayProxy;
+var run = window.Ember.run;
+
+var Modal = _dereq_("./modal")["default"] || _dereq_("./modal");
+
+/**
+ * A flavour of a {{#crossLink "Modal}}Modal{{/crossLink}} that handles form submission right.
+ * @class ModalForm
+ */
+var ModalForm;
+
+ModalForm = Modal.extend({
+  tagName: 'form',
+  attributeBindings: ['in-async'],
+  'in-async': null,
+  'close-if-error': false,
+  submitted: false,
+  error: null,
+
+  /**
+   * Handle form submit event.
+   * Submit the form, if the event returns a promise, then wait for the promise to be fulfilled first before
+   * closing the modal, if the promise returned an error, then the `error` property will be set with the given error object of the
+   * promise, when error occurs, the modal will only get closed if the `close-if-error` property isn't set to false
+   *
+   * @method submitForm
+   * @private
+   */
+  submitForm: (function(e) {
+    e.preventDefault();
+    this.sendAction('on-submit', this, e);
+    this.set('submitted', true);
+    if (e.promise && "function" === typeof e.promise.then) {
+      this.set('in-async', 'true');
+      return e.promise.then((function(_this) {
+        return function(r) {
+          _this.set('in-async', null);
+          return _this.close();
+        };
+      })(this), (function(_this) {
+        return function(err) {
+          _this.set('in-async', null);
+          _this.set('error', err);
+          if (_this.get('close-if-error')) {
+            return _this.close();
+          }
+        };
+      })(this));
+    } else {
+      return this.close();
+    }
+  }).on('submit'),
+  close: function() {
+    this.set('error', null);
+    if (!this.get('submitted')) {
+      this.sendAction('on-cancel', this);
+    }
+    return this._super.apply(this, arguments);
+  }
+});
+
+exports["default"] = ModalForm;
+},{"./modal":20}],17:[function(_dereq_,module,exports){
+"use strict";
+var Component = window.Ember.Component;
+var ArrayProxy = window.Ember.ArrayProxy;
+var run = window.Ember.run;
+
+var ModalTitle, StyleBindingsMixin, WithConfigMixin;
+
+WithConfigMixin = Em.Eu.WithConfigMixin;
+
+StyleBindingsMixin = Em.Eu.StyleBindingsMixin;
+
+
+/**
+ * `{{em-modal-title}}` component.
+ *
+ * The title of the modal
+ *
+ * @class ModalTitle
+ * @public
+ */
+
+ModalTitle = Component.extend(WithConfigMixin, StyleBindingsMixin, {
+  classNameBindings: ['styleClasses'],
+
+  /**
+   * The CSS classes that will be attached to the DOM element of the modal
+   * Classes should be configured externally by using the `config` object.
+   *
+   * @property styleClasses
+   * @private
+   * @type String
+   */
+  styleClasses: (function() {
+    var _ref;
+    return (_ref = this.get('config.modal.titleClasses')) != null ? _ref.join(" ") : void 0;
+  }).property(),
+
+  /**
+   * Register the title within the modal
+   * Note: Expects this title to be the direct descendant of the modal component
+   *
+   * @method registerInModal
+   * @private
+   */
+  registerInModal: function() {
+    return (this.get('parentView').setTitle(this)).on('init');
+  }
+});
+
+exports["default"] = ModalTitle;
+},{}],18:[function(_dereq_,module,exports){
+"use strict";
+exports["default"] = Ember.Handlebars.compile("{{#if is-open}}\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content\">\n            {{yield}}\n        </div>\n    </div>\n{{/if}}");
+},{}],19:[function(_dereq_,module,exports){
+"use strict";
+var Component = window.Ember.Component;
+var ArrayProxy = window.Ember.ArrayProxy;
+var run = window.Ember.run;
+var View = window.Ember.View;
+var Modal = _dereq_("./modal")["default"] || _dereq_("./modal");
+var ModalToggler, StyleBindingsMixin, WithConfigMixin;
+
+WithConfigMixin = Em.Eu.WithConfigMixin;
+
+StyleBindingsMixin = Em.Eu.StyleBindingsMixin;
+
+
+/**
+ * `{{em-modal-toggler}}` component.
+ *
+ * A component to toggle the visibility of a modal
+ *
+ * @class ModalToggler
+ * @event on-toggle triggered when the toggler is clicked before changing the visibility of the modal
+ *   @param toggler Toggler - This instance of the toggler
+ * @public
+ */
+
+ModalToggler = Component.extend(WithConfigMixin, StyleBindingsMixin, {
+  tagName: 'button',
+  classNameBindings: ['styleClasses'],
+
+  /**
+   * The CSS classes that will be attached to the DOM element of the modal
+   * Classes should be configured externally by using the `config` object.
+   *
+   * @property styleClasses
+   * @private
+   * @type String
+   */
+  styleClasses: (function() {
+    var _ref;
+    return (_ref = this.get('config.modal.togglerClasses')) != null ? _ref.join(" ") : void 0;
+  }).property(),
+
+  /**
+   * Toggle the visibility of the modal that this toggler controls.
+   *
+   * @method toggleVisibility
+   * @private
+   */
+  toggleVisibility: (function() {
+    this.sendAction('on-toggle', this);
+    return this.get('modal').toggleVisibility();
+  }).on('click'),
+
+  /**
+   * Find the modal view and set it as a `modal` property
+   * A toggler can live as a descendant (not neccessarily a direct one) of a modal or outside of the modal chain
+   * TODO: Assert modal existance
+   * @method modalAsProperty
+   */
+  modalAsProperty: (function() {
+    var modalAsAncestor;
+    modalAsAncestor = this.nearestOfType(Modal);
+    if (modalAsAncestor) {
+      return this.set('modal', modalAsAncestor);
+    } else {
+      return run.schedule('afterRender', this, function() {
+        return this.set('modal', View.views[this.get('modal-id')]);
+      });
+    }
+  }).on('willInsertElement')
+});
+
+exports["default"] = ModalToggler;
+},{"./modal":20}],20:[function(_dereq_,module,exports){
+"use strict";
+var Component = window.Ember.Component;
+var ArrayProxy = window.Ember.ArrayProxy;
+var run = window.Ember.run;
+
+var ModalComponent, StyleBindingsMixin, WithConfigMixin;
+
+WithConfigMixin = Em.Eu.WithConfigMixin;
+
+StyleBindingsMixin = Em.Eu.StyleBindingsMixin;
+
+
+/**
+ * `{{em-modal}}` component.
+ *
+ * Define a modal component that can be opened and closed, the modal visibility is controlled by the 
+ * {{#crossLink "ModalToggler"}}ModalToggler{{/crossLink}} component.
+ *
+ * ```handlebars
+ * {{#em-modal id="modal1"}}
+ *   {{#em-modal-title}}
+ *     {{#em-modal-toggler}}<span>&times;</span>{{/em-modal-toggler}}
+ *        <h4 class="modal-title">I'm a modal title</h4>
+ *    {{/em-modal-title}}
+ *    {{#em-modal-body}}
+ *        One fine body…
+ *    {{/em-modal-body}}
+ *    {{#em-modal-footer}}
+ *    {{#em-modal-toggler}}Close{{/em-modal-toggler}}
+ *    {{/em-modal-footer}}
+ * {{/em-modal}}
+ * {{#em-modal-toggler modal-id="modal1"}}Click me!{{/em-modal-toggler}}
+ * ```
+ *
+ * @class Modal
+ * @event will-open
+ * @event did-open
+ * @event will-close
+ * @public
+ */
+
+ModalComponent = Component.extend(WithConfigMixin, StyleBindingsMixin, {
+  layoutName: 'em-modal',
+
+  /**
+   * Properties bound as attributes the DOM element.
+   * see documentation per property.
+   * @property panels
+   * @private
+   * @type Array
+   */
+  attributeBindings: ['is-open', 'did-open', 'tabindex'],
+  classNameBindings: ['styleClasses', 'styleOpenningClasses'],
+  styleBindings: ['display'],
+
+  /**
+   * Define the tabindex DOM property.
+   * Required otherwise no keyDown events
+   * @property tabindex
+   */
+  tabindex: 0,
+
+  /**
+   * The CSS classes that will be attached to the DOM element of the modal
+   * Classes should be configured externally by using the `config` object.
+   * @property styleClasses
+   * @private
+   * @type String
+   */
+  styleClasses: (function() {
+    var _ref;
+    return (_ref = this.get('config.modal.classes')) != null ? _ref.join(" ") : void 0;
+  }).property('config.modal.classes'),
+
+  /**
+   * The class name that will be set when the modal gets opened
+   * @property styleOpenningClasses
+   * @public
+   */
+  styleOpenningClasses: (function() {
+    if (this.get('did-open')) {
+      return "in";
+    } else {
+      return "";
+    }
+  }).property('did-open'),
+
+  /*
+   * The CSS `display` property state.
+   * @property display
+   * @public
+   */
+  display: (function() {
+    if (this.get('did-open')) {
+      return 'block';
+    } else {
+      return 'none';
+    }
+  }).property('did-open'),
+
+  /**
+   * `show` property is bound to the DOM element as an attribute.
+   * This property is set to true immediately when the `toggleVisibility` method is invoked.
+   *
+   * This property can be used to start a transitioning effect, for example:
+   * ```css
+   *   em-modal[show] {
+   *     opacity: 0;
+   *     transition: opacity 100ms ease;
+   *   }
+   * ```
+   * 
+   * The transition effect should be ended when the modal is gets visible, see the property `shown` for more info.
+   * @property opened
+   * @see 'did-open'
+   * @private
+   */
+  'is-open': false,
+
+  /**
+   * A property bound to the DOM element that indicates that the modal has been made visible to the user. 
+   * (after the DOM element was set with `display: block;`)
+   *
+   * This proeprty can be used by CSS to end a transitioning effect by setting the CSS `opacity` to a higher number, for example:
+   *
+   * ```css
+   *   em-modal[shown] {
+   *     opacity: 1;
+   *   }
+  }
+   * ```
+   * @property did-open
+   * @private
+   */
+  'did-open': false,
+
+  /**
+   * Open modal and make it visible.
+   * @method open
+   * @public
+   */
+  open: function() {
+    this.trigger('show');
+    this.sendAction('show', this);
+    this.set('is-open', 'true');
+    return run.schedule('afterRender', this, function() {
+      this.set('did-open', 'true');
+      return this.trigger('shown');
+    });
+  },
+
+  /**
+   * Close the modal by making it invisible.
+   * @method close
+   * @public
+   */
+  close: function() {
+    this.trigger('hide');
+    this.sendAction('hide', this);
+    this.set('is-open', void 0);
+    return this.set('did-open', void 0);
+  },
+
+  /**
+   * Toggle the visibility of the modal based on its current state.
+   * @method toggleVisibility
+   * @public
+   */
+  toggleVisibility: function() {
+    if (this.get('is-open')) {
+      return this.close();
+    } else {
+      return this.open();
+    }
+  },
+
+  /**
+   * Set the title of the modal.
+   * @method setTitle
+   * @private
+   * @type ModalTitle
+   */
+  setTitle: function(title) {
+    return this.set('title', title);
+  },
+
+  /**
+   * Set the toggler of the modal
+   * @method setToggler
+   * @private
+   * @type ModalToggler
+   */
+  setToggler: function(toggler) {
+    return this.set('toggler', toggler);
+  },
+
+  /**
+   * Close the modal if the user clicks outside of the modal space.
+   * @method closeIfClickedOutside
+   * @private
+   */
+  closeIfClickedOutside: (function(e) {
+    if (e.target !== this.get('element')) {
+      return;
+    }
+    return this.close();
+  }).on('click'),
+
+  /**
+   * Handle keyboard events
+   * @method handleKeyboard
+   * @private
+   */
+  handleKeyboard: (function(e) {
+    switch (e.keyCode) {
+      case 27:
+        return this.close();
+    }
+  }).on('keyDown'),
+
+  /**
+   * Consumer can bind this property for a more fine grained control over when the modal is opened,
+   * This is good for situations where openning the modal via the `toggler` is not enough.
+   *
+   * @property open-if
+   * @public
+   */
+  'open-if': false,
+
+  /**
+   * observers the `open-if` property, if set to true, then open the modal.
+   * @method openIf
+   * @private
+   */
+  openIf: (function() {
+    if (!this.get('open-if')) {
+      return;
+    }
+    this.open();
+    return this.set('open-if', false);
+  }).observes('open-if'),
+
+  /**
+   * Consumer can bind this property for a more fine grained control over when the modal is closed,
+   * This is good for situations where closing the modal via the `toggler` is not enough.
+   *
+   * @property close-if
+   * @public
+   */
+  'close-if': false,
+
+  /**
+   * observers the `close-if` property, if set to true, then close the modal.
+   * @method closeIf
+   * @private
+   */
+  closeIf: (function() {
+    if (!this.get('close-if')) {
+      return;
+    }
+    this.close();
+    return this.set('close-if', false);
+  }).observes('close-if')
+});
+
+exports["default"] = ModalComponent;
+},{}],21:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var ArrayProxy = window.Ember.ArrayProxy;
@@ -758,7 +1586,7 @@ TabList = Component.extend(WithConfigMixin, {
 });
 
 exports["default"] = TabList;;
-},{}],9:[function(_dereq_,module,exports){
+},{}],22:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var computed = window.Ember.computed;
@@ -828,7 +1656,7 @@ TabPanel = Component.extend(WithConfigMixin, StyleBindingsMixin, {
 });
 
 exports["default"] = TabPanel;;
-},{}],10:[function(_dereq_,module,exports){
+},{}],23:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var computed = window.Ember.computed;
@@ -958,10 +1786,10 @@ Tab = Component.extend(WithConfigMixin, {
 });
 
 exports["default"] = Tab;;
-},{}],11:[function(_dereq_,module,exports){
+},{}],24:[function(_dereq_,module,exports){
 "use strict";
 exports["default"] = Ember.Handlebars.compile(".em-tabs, .em-tab-list, .em-tab-panel {\n  display: block;\n}\n\n.em-tab-list {\n  border-bottom: 1px solid #eee;\n}\n\n.em-tab {\n  display: inline-block;\n  padding: 6px 12px;\n  border: 1px solid transparent;\n  border-top-left-radius: 3px;\n  border-top-right-radius: 3px;\n  cursor: pointer;\n  margin-bottom: -1px;\n  position: relative;\n}\n\n.em-tab[active=true] {\n  border-color: #eee;\n  border-bottom-color: #fff;\n}");
-},{}],12:[function(_dereq_,module,exports){
+},{}],25:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var ArrayProxy = window.Ember.ArrayProxy;
@@ -1098,10 +1926,10 @@ Tabs = Component.extend(WithConfigMixin, StyleBindingsMixin, {
 });
 
 exports["default"] = Tabs;;
-},{}],13:[function(_dereq_,module,exports){
+},{}],26:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
-var Node;
+var Node, findChildrenOfNodeBy;
 
 Node = Ember.Object.extend({
   children: void 0,
@@ -1162,17 +1990,36 @@ Node = Ember.Object.extend({
   }).property('children.length'),
   isLevel1: (function() {
     return this.get('level') === 0;
-  }).property('children.length')
+  }).property('children.length'),
+  findChildBy: function(key, name) {
+    return findChildrenOfNodeBy(this, key, name);
+  }
 });
 
 exports["default"] = Node;
-},{}],14:[function(_dereq_,module,exports){
+
+findChildrenOfNodeBy = function(currChild, key, value) {
+  var c, _i, _len, _ref, _ref1;
+  if (currChild.get(key) === value) {
+    return currChild;
+  } else if (((_ref = currChild.get('children')) != null ? _ref.length : void 0) > 0) {
+    _ref1 = currChild.get('children');
+    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+      c = _ref1[_i];
+      if (c.get(key) === value) {
+        return c;
+      } else {
+        findChildrenOfNodeBy(c, key, value);
+      }
+    }
+    return null;
+  }
+  return null;
+};
+},{}],27:[function(_dereq_,module,exports){
 "use strict";
-exports["default"] = Ember.Handlebars.compile(".em-tree-node {\n    cursor: pointer;\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -khtml-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n    user-select: none;\n}\n\n.em-tree-node-active {\n    background: #e7e7e7;\n}");
-},{}],15:[function(_dereq_,module,exports){
-"use strict";
-exports["default"] = Ember.Handlebars.compile("{{#each nodes}}\n    {{em-tree-node node=this async=controller.async targetObject=controller.targetObject}}\n{{/each}}");
-},{}],16:[function(_dereq_,module,exports){
+exports["default"] = Ember.Handlebars.compile("{{#each children}}\n    {{em-tree-node model=this tree=view.tree async=controller.async targetObject=controller.targetObject}}\n{{/each}}");
+},{}],28:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var ArrayProxy = window.Ember.ArrayProxy;
@@ -1192,20 +2039,15 @@ WithConfigMixin = Em.Eu.WithConfigMixin;
 TreeBranch = Component.extend(WithConfigMixin, {
 
   /**
-   * The node to render its children within this branch
-   * this property is expected to be defined by the user
+   * The model to render its children within this branch
+   * this property is set during component markup creation
    */
-  node: void 0,
-
-  /**
-   * The root node of the tree
-   */
-  rootNode: computed.alias('node.root'),
+  model: void 0,
 
   /**
    * A list of {{#crossLink "TreeNode"}}nodes{{/crossLink}} instances.
    */
-  nodes: computed.alias('node.children'),
+  children: computed.alias('model.children'),
 
   /**
    * True if node's children should be loaded asynchronously
@@ -1223,10 +2065,111 @@ TreeBranch = Component.extend(WithConfigMixin, {
 });
 
 exports["default"] = TreeBranch;;
-},{}],17:[function(_dereq_,module,exports){
+},{}],29:[function(_dereq_,module,exports){
 "use strict";
-exports["default"] = Ember.Handlebars.compile("{{#if hasIcon}}\n    <i {{action toggle}} {{bind-attr class=\"iconClass\"}}></i>\n{{else}}\n    <a {{action toggle}} class=\"text\">*</a>\n{{/if}}\n\n<span {{action select}} {{bind-attr class=\"nodeSelectedClasses\"}}>{{node.title}}</span>\n\n{{#if expanded}}\n    {{em-tree-branch node=node async=async targetObject=targetObject}}\n{{/if}}");
-},{}],18:[function(_dereq_,module,exports){
+exports["default"] = Ember.Handlebars.compile(".em-tree-node {\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -khtml-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n    user-select: none;\n}\n\n.em-tree-node-active {\n    background: #e7e7e7;\n}\n\nli.em-tree-node > span {\n    cursor: pointer;\n}\n\nli.em-tree-node > span > span.actions {\n    visibility: hidden;\n}\n\nli.em-tree-node > span:hover > span.actions {\n    visibility: visible;\n}");
+},{}],30:[function(_dereq_,module,exports){
+"use strict";
+var Component = window.Ember.Component;
+var ArrayProxy = window.Ember.ArrayProxy;
+var computed = window.Ember.computed;
+
+var StyleBindingsMixin, TreeNodeIconAction, WithConfigMixin;
+
+WithConfigMixin = Em.Eu.WithConfigMixin;
+
+StyleBindingsMixin = Em.Eu.StyleBindingsMixin;
+
+
+/**
+ * An icon action of a tree node
+ * @class TreeNodeIconAction
+ */
+
+TreeNodeIconAction = Component.extend(WithConfigMixin, StyleBindingsMixin, {
+  attributeBindings: ['stickyMode:sticky'],
+
+  /**
+   * The tag name of the icon action,
+   * default is `<i>` but can be replaced with any tag.
+   * @property tagName
+   * @public
+   */
+  tagName: 'i',
+
+  /**
+   * Bind the visibility css property,
+   * this is required for the `sticky` property
+   * @property styleBindings
+   * @private
+   */
+  styleBindings: 'visibility',
+
+  /**
+   * Defines the css visibility according to the value of the `sticky` property
+   * @property visibility
+   * @private
+   */
+  visibility: (function() {
+    if (this.get('sticky')) {
+      return 'visible';
+    } else {
+      return void 0;
+    }
+  }).property('sticky'),
+
+  /**
+   * 'true' if the action icon should be sticky and not disappear when item is not hovered
+   * @property sticky
+   * @public
+   */
+  sticky: false,
+  stickyMode: (function() {
+    if (this.get('sticky')) {
+      return 'true';
+    } else {
+      return void 0;
+    }
+  }).property('sticky'),
+
+  /**
+   * Binds the specified css classes
+   * @property classNameBindings
+   * @private
+   */
+  classNameBindings: ['iconClasses'],
+
+  /**
+   * Set the given array of classes
+   * @property iconClasses
+   * @private
+   */
+  iconClasses: (function() {
+    var _ref;
+    return (_ref = this.get('meta.classes')) != null ? _ref.join(" ") : void 0;
+  }).property('meta.classes'),
+
+  /**
+   * An alias to the node model of this action
+   * @property node
+   * @public
+   */
+  node: computed.alias('parentView.node'),
+
+  /**
+   * Invoked when the action is clicked
+   * @method invokde
+   */
+  invoked: (function() {
+    return this.get('parentView.targetObject').send(this.get('meta.action'), this);
+  }).on('click')
+});
+
+exports["default"] = TreeNodeIconAction;
+},{}],31:[function(_dereq_,module,exports){
+"use strict";
+exports["default"] = Ember.Handlebars.compile("<span\n{{#if hasIcon}}\n    <i {{action toggle}} {{bind-attr class=\"iconClass\"}}></i>\n{{else}}\n    <a {{action toggle}} class=\"text\">*</a>\n{{/if}}\n</span>\n\n{{#if tree.in-multi-selection}}\n    <span class=\"em-tree-node-multiselection\">\n    {{#if multi-selected}}\n        <i {{action toggleSelection}} {{bind-attr class=\"tree.selected-icon\"}}></i>\n    {{else}}\n        <i {{action toggleSelection}} {{bind-attr class=\"tree.unselected-icon\"}}></i>\n    {{/if}}\n    </span>\n{{/if}}\n\n<span {{action select}} {{bind-attr class=\"nodeSelectedClasses :title\"}}>\n{{model.title}}\n{{#if tree.hovered-actions}}\n    <span class=\"actions\">\n    {{#each tree.hovered-actions}}\n        {{em-tree-node-icon-action meta=this model=controller.model}}</i>\n    {{/each}}\n    </span>\n{{/if}}\n</span>\n\n{{#if expanded}}\n    {{em-tree-branch model=model tree=tree async=async targetObject=targetObject}}\n{{/if}}");
+},{}],32:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var ArrayProxy = window.Ember.ArrayProxy;
@@ -1244,49 +2187,50 @@ WithConfigMixin = Em.Eu.WithConfigMixin;
  */
 
 TreeNode = Component.extend(WithConfigMixin, {
+  attributeBindings: ['multi-selected'],
 
   /**
-   * The node model the tree node view is bound to
+   * The model the tree node view is bound to
    */
-  node: void 0,
+  model: void 0,
 
   /**
-   * true if the node of this view is a root node
+   * A reference to the tree view, this property is auto set during component instantiation
    */
-  isRootNode: computed.not('node.hasParent'),
+  tree: void 0,
 
   /**
-   * The root node model
+   * A reference to the root model
    */
-  root: computed.alias('node.root'),
+  rootModel: computed.alias('tree.model'),
 
   /**
    * True if the node is currently expanded, meaning its children are visible.
    */
-  expanded: false,
+  expanded: computed.alias('model.expanded'),
 
   /**
-   * True if this node is currently checked
-   * This is only relevant if the tree configured to support selection
+   * True if this node view is currently checked
+   * This is only relevant if the tree configured to support multi selection
    */
-  checked: false,
+  'multi-selected': computed.alias('model.selected'),
 
   /**
-   * True if should render an icon tag for this node
+   * True if should render an icon tag for this node view
    */
   hasIcon: true,
 
   /**
-   * True if nodes can be selected
+   * True if this node can be single selected
    */
   selectable: true,
 
   /**
-   * True if this node is currently selected
+   * True if this node is currently single selected
    */
   isSelected: (function() {
-    return this.get('rootBranchView.selected') === this.get('node');
-  }).property('rootBranchView.selected'),
+    return this.get('tree.selected') === this.get('model');
+  }).property('tree.selected'),
 
   /**
    * True if this node is currently loading,
@@ -1301,31 +2245,11 @@ TreeNode = Component.extend(WithConfigMixin, {
   async: computed.alias('parentView.async'),
 
   /**
-   * Get the view of the root node
+   * true if this is a leaf node, meaning it has no children
    */
-  rootNodeView: (function() {
-    var view;
-    if (this.get('isRootNode')) {
-      return this;
-    }
-    view = this.get('parentView');
-    while (view) {
-      if (view.get('isRootNode')) {
-        return view;
-      }
-      view = view.get('parentView');
-    }
-  }).property('node'),
-
-  /**
-   * The root branch view
-   */
-  rootBranchView: (function() {
-    return this.get('rootNodeView.parentView');
-  }).property('rootNodeView'),
   leaf: (function() {
-    return this.get('node.children.length') === 0;
-  }).property('node.children.length'),
+    return !this.get('model.children') || this.get('model.children.length') === 0;
+  }).property('model.children.length'),
   tagName: 'li',
   layoutName: 'em-tree-node',
   classNameBindings: ['styleClasses', 'expandedClasses', 'leafClasses'],
@@ -1349,16 +2273,23 @@ TreeNode = Component.extend(WithConfigMixin, {
       return null;
     }
   }).property('isSelected'),
+  addMultiSelectionToTreeSelection: (function() {
+    if (this.get('multi-selected')) {
+      return this.get('tree.multi-selection').pushObject(this.get('model'));
+    } else {
+      return this.get('tree.multi-selection').removeObject(this.get('model'));
+    }
+  }).observes('multi-selected').on('init'),
   iconClass: (function() {
     var icons;
     icons = [];
     if (this.get('async')) {
       if (this.get('loading')) {
         icons = icons.concat(this.get('config.tree.nodeLoadingIconClasses'));
-      } else if (!this.get('node.children')) {
+      } else if (!this.get('model.children')) {
         icons = icons.concat(this.get('config.tree.nodeCloseIconClasses'));
       } else {
-        if (this.get('node.children.length') === 0) {
+        if (this.get('model.children.length') === 0) {
           icons = icons.concat(this.get('config.tree.nodeLeafIconClasses'));
         } else {
           icons = this.get('expanded') ? icons.concat(this.get('config.tree.nodeOpenIconClasses')) : icons.concat(this.get('config.tree.nodeCloseIconClasses'));
@@ -1381,9 +2312,9 @@ TreeNode = Component.extend(WithConfigMixin, {
   }).property('leaf'),
   actions: {
     toggle: function() {
-      if (this.get('async') && !this.get('expanded') && !this.get('node.children')) {
+      if (this.get('async') && !this.get('expanded') && !this.get('model.children')) {
         this.set('loading', true);
-        return this.sendAction('children', this.get('node'), this);
+        return this.sendAction('children', this.get('model'), this);
       } else {
         return this.toggleProperty('expanded');
       }
@@ -1392,7 +2323,14 @@ TreeNode = Component.extend(WithConfigMixin, {
       if (!this.get('selectable')) {
         return;
       }
-      return this.set('rootBranchView.selected', this.get('node'));
+      return this.set('tree.selected', this.get('model'));
+    },
+    toggleSelection: function() {
+      if (this.get('multi-selected')) {
+        return this.set('multi-selected', '');
+      } else {
+        return this.set('multi-selected', 'true');
+      }
     }
   },
   children: 'getChildren',
@@ -1404,7 +2342,95 @@ TreeNode = Component.extend(WithConfigMixin, {
 });
 
 exports["default"] = TreeNode;;
-},{}],19:[function(_dereq_,module,exports){
+},{}],33:[function(_dereq_,module,exports){
+"use strict";
+exports["default"] = Ember.Handlebars.compile("{{em-tree-node model=model tree=view async=async targetObject=targetObject}}");
+},{}],34:[function(_dereq_,module,exports){
+"use strict";
+var Component = window.Ember.Component;
+var ArrayProxy = window.Ember.ArrayProxy;
+var computed = window.Ember.computed;
+var A = window.Ember.A;
+var Tree, WithConfigMixin, expandTree;
+
+WithConfigMixin = Em.Eu.WithConfigMixin;
+
+
+/**
+ * A tree component
+ *
+ * @class Tree
+ */
+
+Tree = Component.extend(WithConfigMixin, {
+  tagName: 'ul',
+  layoutName: 'em-tree',
+  classNameBindings: ['styleClasses'],
+  styleClasses: (function() {
+    var _ref;
+    return (_ref = this.get('config.tree.classes')) != null ? _ref.join(" ") : void 0;
+  }).property(),
+
+  /**
+   * The model to render as the root node of the tree
+   * this property is expected to be defined by the user
+   */
+  model: void 0,
+
+  /**
+   * True if node's children should be loaded asynchronously
+   * This gives the opportunity to the user to invoke an async call to the server to retrieve data for the current
+   * branch being opened
+   */
+  async: false,
+  'in-multi-selection': false,
+  'multi-selection': A(),
+  'selected-icon': 'fa fa-check',
+  'unselected-icon': 'fa fa-times',
+  'expand-depth': null,
+  'auto-expand': false,
+  expandByDepth: (function() {
+    var depth;
+    if (this.get('expand-depth')) {
+      depth = parseInt(this.get('expand-depth'));
+      if (depth === 0) {
+        return;
+      }
+      return expandTree(this.get('model'), depth);
+    }
+  }).observes('expand-depth')
+});
+
+exports["default"] = Tree;
+
+expandTree = function(node, depth) {
+  var c, children, _i, _len, _results;
+  if (depth === 0) {
+    return;
+  }
+  node.set('expanded', true);
+  children = node.get('children');
+  if (children && "function" === typeof children.then) {
+    return children.then((function(_this) {
+      return function(loadedChildren) {
+        return loadedChildren.forEach(function(c) {
+          return expandTree(c, depth - 1);
+        });
+      };
+    })(this));
+  } else {
+    if (children.get('length') === 0 || depth === 0) {
+      return;
+    }
+    _results = [];
+    for (_i = 0, _len = children.length; _i < _len; _i++) {
+      c = children[_i];
+      _results.push(expandTree(c, depth - 1));
+    }
+    return _results;
+  }
+};
+},{}],35:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var computed = window.Ember.computed;
@@ -1438,7 +2464,7 @@ ActionGroup = Component.extend(WithConfigMixin, {
 });
 
 exports["default"] = ActionGroup;;
-},{}],20:[function(_dereq_,module,exports){
+},{}],36:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var computed = window.Ember.computed;
@@ -1485,10 +2511,10 @@ Action = Component.extend(WithConfigMixin, {
 });
 
 exports["default"] = Action;;
-},{}],21:[function(_dereq_,module,exports){
+},{}],37:[function(_dereq_,module,exports){
 "use strict";
 exports["default"] = Ember.Handlebars.compile("{{#if icon}}\n    <i {{bind-attr class=icon}}></i>\n{{/if}}\n");
-},{}],22:[function(_dereq_,module,exports){
+},{}],38:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var computed = window.Ember.computed;
@@ -1559,7 +2585,7 @@ Editor = Component.extend(StyleBindingsMixin, {
 });
 
 exports["default"] = Editor;;
-},{}],23:[function(_dereq_,module,exports){
+},{}],39:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var computed = window.Ember.computed;
@@ -1604,7 +2630,7 @@ Toolbar = Component.extend(WithConfigMixin, {
 });
 
 exports["default"] = Toolbar;;
-},{}],24:[function(_dereq_,module,exports){
+},{}],40:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var ArrayProxy = window.Ember.ArrayProxy;
@@ -1668,6 +2694,6 @@ Wysiwyg = Component.extend(WithConfigMixin, {
 });
 
 exports["default"] = Wysiwyg;;
-},{}]},{},[7])
-(7)
+},{}]},{},[9])
+(9)
 });

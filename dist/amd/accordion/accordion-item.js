@@ -133,14 +133,12 @@ define(
       hide: function() {
         var $accordionBody;
         $accordionBody = this.$('.panel-collapse');
-        $accordionBody.removeClass('in');
-        return $accordionBody.height($accordionBody.height())[0].offsetHeight;
+        return $accordionBody.removeClass('in');
       },
       show: function() {
         var $accordionBody;
         $accordionBody = this.$('.panel-collapse');
-        $accordionBody.addClass('in');
-        return $accordionBody.height($accordionBody[0]['scrollHeight']);
+        return $accordionBody.addClass('in');
       }
     });
 

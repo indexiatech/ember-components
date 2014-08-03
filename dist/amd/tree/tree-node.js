@@ -18,49 +18,50 @@ define(
      */
 
     TreeNode = Component.extend(WithConfigMixin, {
+      attributeBindings: ['multi-selected'],
 
       /**
-       * The node model the tree node view is bound to
+       * The model the tree node view is bound to
        */
-      node: void 0,
+      model: void 0,
 
       /**
-       * true if the node of this view is a root node
+       * A reference to the tree view, this property is auto set during component instantiation
        */
-      isRootNode: computed.not('node.hasParent'),
+      tree: void 0,
 
       /**
-       * The root node model
+       * A reference to the root model
        */
-      root: computed.alias('node.root'),
+      rootModel: computed.alias('tree.model'),
 
       /**
        * True if the node is currently expanded, meaning its children are visible.
        */
-      expanded: false,
+      expanded: computed.alias('model.expanded'),
 
       /**
-       * True if this node is currently checked
-       * This is only relevant if the tree configured to support selection
+       * True if this node view is currently checked
+       * This is only relevant if the tree configured to support multi selection
        */
-      checked: false,
+      'multi-selected': computed.alias('model.selected'),
 
       /**
-       * True if should render an icon tag for this node
+       * True if should render an icon tag for this node view
        */
       hasIcon: true,
 
       /**
-       * True if nodes can be selected
+       * True if this node can be single selected
        */
       selectable: true,
 
       /**
-       * True if this node is currently selected
+       * True if this node is currently single selected
        */
       isSelected: (function() {
-        return this.get('rootBranchView.selected') === this.get('node');
-      }).property('rootBranchView.selected'),
+        return this.get('tree.selected') === this.get('model');
+      }).property('tree.selected'),
 
       /**
        * True if this node is currently loading,
@@ -75,31 +76,11 @@ define(
       async: computed.alias('parentView.async'),
 
       /**
-       * Get the view of the root node
+       * true if this is a leaf node, meaning it has no children
        */
-      rootNodeView: (function() {
-        var view;
-        if (this.get('isRootNode')) {
-          return this;
-        }
-        view = this.get('parentView');
-        while (view) {
-          if (view.get('isRootNode')) {
-            return view;
-          }
-          view = view.get('parentView');
-        }
-      }).property('node'),
-
-      /**
-       * The root branch view
-       */
-      rootBranchView: (function() {
-        return this.get('rootNodeView.parentView');
-      }).property('rootNodeView'),
       leaf: (function() {
-        return this.get('node.children.length') === 0;
-      }).property('node.children.length'),
+        return !this.get('model.children') || this.get('model.children.length') === 0;
+      }).property('model.children.length'),
       tagName: 'li',
       layoutName: 'em-tree-node',
       classNameBindings: ['styleClasses', 'expandedClasses', 'leafClasses'],
@@ -123,16 +104,23 @@ define(
           return null;
         }
       }).property('isSelected'),
+      addMultiSelectionToTreeSelection: (function() {
+        if (this.get('multi-selected')) {
+          return this.get('tree.multi-selection').pushObject(this.get('model'));
+        } else {
+          return this.get('tree.multi-selection').removeObject(this.get('model'));
+        }
+      }).observes('multi-selected').on('init'),
       iconClass: (function() {
         var icons;
         icons = [];
         if (this.get('async')) {
           if (this.get('loading')) {
             icons = icons.concat(this.get('config.tree.nodeLoadingIconClasses'));
-          } else if (!this.get('node.children')) {
+          } else if (!this.get('model.children')) {
             icons = icons.concat(this.get('config.tree.nodeCloseIconClasses'));
           } else {
-            if (this.get('node.children.length') === 0) {
+            if (this.get('model.children.length') === 0) {
               icons = icons.concat(this.get('config.tree.nodeLeafIconClasses'));
             } else {
               icons = this.get('expanded') ? icons.concat(this.get('config.tree.nodeOpenIconClasses')) : icons.concat(this.get('config.tree.nodeCloseIconClasses'));
@@ -155,9 +143,9 @@ define(
       }).property('leaf'),
       actions: {
         toggle: function() {
-          if (this.get('async') && !this.get('expanded') && !this.get('node.children')) {
+          if (this.get('async') && !this.get('expanded') && !this.get('model.children')) {
             this.set('loading', true);
-            return this.sendAction('children', this.get('node'), this);
+            return this.sendAction('children', this.get('model'), this);
           } else {
             return this.toggleProperty('expanded');
           }
@@ -166,7 +154,14 @@ define(
           if (!this.get('selectable')) {
             return;
           }
-          return this.set('rootBranchView.selected', this.get('node'));
+          return this.set('tree.selected', this.get('model'));
+        },
+        toggleSelection: function() {
+          if (this.get('multi-selected')) {
+            return this.set('multi-selected', '');
+          } else {
+            return this.set('multi-selected', 'true');
+          }
         }
       },
       children: 'getChildren',

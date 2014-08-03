@@ -19,6 +19,7 @@ WithConfigMixin = Em.Eu.WithConfigMixin;
 
 List = Component.extend(WithConfigMixin, {
   tagName: 'ul',
+  attributeBindings: ['style'],
   classNameBindings: ['styleClasses'],
   styleClasses: (function() {
     var _ref;
@@ -32,6 +33,11 @@ List = Component.extend(WithConfigMixin, {
    * @type Item
    */
   selected: void 0,
+
+  /**
+   * True if this list supports selection
+   */
+  selection: true,
 
   /**
    * List can be bound to models, models can be a property or an object that the list is bound to.
@@ -94,24 +100,28 @@ List = Component.extend(WithConfigMixin, {
    */
   select: function(item) {
     var _ref;
-    if (!item || this.get('selected') === item) {
-      return;
+    if (!this.get('selection')) {
+      return item.sendAction('on-click', item);
+    } else {
+      if (!item || this.get('selected') === item) {
+        return;
+      }
+      Em.debug("Selecting tab: " + (item.get('index')));
+      if ((_ref = this.get('selected')) != null ? _ref.sendAction : void 0) {
+        this.get('selected').sendAction('on-deselect', this.get('selected'));
+      }
+      this.set('selected', item);
+      this.get('selected').sendAction('on-select', this.get('selected'));
+      this.set('selected-idx', item.get('index'));
+      return this.get('items').forEach((function(_this) {
+        return function(i) {
+          if (_this.get('selected') === i) {
+            return;
+          }
+          return i.sendAction('on-selection-change', i, _this.get('selected'));
+        };
+      })(this));
     }
-    Em.debug("Selecting tab: " + (item.get('index')));
-    if ((_ref = this.get('selected')) != null ? _ref.sendAction : void 0) {
-      this.get('selected').sendAction('on-deselect', this.get('selected'));
-    }
-    this.set('selected', item);
-    this.get('selected').sendAction('on-select', this.get('selected'));
-    this.set('selected-idx', item.get('index'));
-    return this.get('items').forEach((function(_this) {
-      return function(i) {
-        if (_this.get('selected') === i) {
-          return;
-        }
-        return i.sendAction('on-selection-change', i, _this.get('selected'));
-      };
-    })(this));
   },
   notifyModelsChange: (function() {
     return run.next(this, function() {
