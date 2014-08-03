@@ -48,6 +48,10 @@
 `import ModalConfirmComponent       from './modal/modal-confirm'`
 `import ModalConfirmTmpl            from './modal/modal-confirm-tmpl'`
 
+#Button
+`import ButtonComponent             from './button/button'`
+`import ButtonTmplComponent         from './button/button-tmpl'`
+
 #General
 `import {Application, Namespace}    from 'ember';`
 
@@ -164,6 +168,9 @@ Application.initializer
         c.register 'component:em-modal-confirm', ModalConfirmComponent
         c.register 'template:em-modal-confirm', ModalConfirmTmpl
 
+        #Button
+        c.register 'component:em-button', ButtonComponent
+        c.register 'template:em-button', ButtonTmplComponent
 
 `export {TabsComponent, TabListComponent, TabComponent, TabPanelComponent, 
         WysiwygComponent, WysiwygToolbarComponent, WysiwygActionGroupComponent, WysiwygActionComponent, WysiwygEditorComponent,
@@ -171,4 +178,5 @@ Application.initializer
         TreeComponent, TreeNodeComponent, TreeBranchComponent, TreeNode, TreeNodeIconAction,
         ListComponent, ListItemComponent,
         ModalComponent, ModalTitleComponent, ModalBodyComponent, ModalFooterComponent, ModalTogglerComponent, ModalConfirmComponent, 
-            ModalFormComponent, ModalEmFormComponent}`
+            ModalFormComponent, ModalEmFormComponent,
+            ButtonComponent}`
