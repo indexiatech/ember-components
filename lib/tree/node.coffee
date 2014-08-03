@@ -61,6 +61,22 @@ Node = Ember.Object.extend
     ).property('children.length')
 
     isLevel1: (->
-        return @get('level') is 0
+        @get('level') is 0
     ).property('children.length')
+    
+    findChildBy: (key, name) ->
+        findChildrenOfNodeBy @, key, name
+
 `export default Node`
+
+findChildrenOfNodeBy = (currChild, key, value) ->
+        if currChild.get(key) is value
+            return currChild
+        else if currChild.get('children')?.length > 0
+            for c in currChild.get('children')
+                if c.get(key) is value
+                    return c
+                else
+                    findChildrenOfNodeBy c, key, value
+            return null
+        return null

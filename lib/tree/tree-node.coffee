@@ -9,6 +9,8 @@ WithConfigMixin = Em.Eu.WithConfigMixin
 # @class TreeNode
 ###
 TreeNode = Component.extend WithConfigMixin,
+    attributeBindings: ['multi-selected']
+
     ###*
     # The model the tree node view is bound to
     ###
@@ -31,9 +33,9 @@ TreeNode = Component.extend WithConfigMixin,
 
     ###*
     # True if this node view is currently checked
-    # This is only relevant if the tree configured to support selection
+    # This is only relevant if the tree configured to support multi selection
     ###
-    selected: false
+    'multi-selected': computed.alias 'model.selected'
 
     ###*
     # True if should render an icon tag for this node view
@@ -41,12 +43,12 @@ TreeNode = Component.extend WithConfigMixin,
     hasIcon: true
 
     ###*
-    # True if this node can be selected
+    # True if this node can be single selected
     ###
     selectable: true
 
     ###*
-    # True if this node is currently selected
+    # True if this node is currently single selected
     ###
     isSelected: (->
         @get('tree.selected') is @get('model')
@@ -88,10 +90,16 @@ TreeNode = Component.extend WithConfigMixin,
             @get('config.tree.nodeCloseClasses')?.join(" ")
     ).property('expanded', 'leaf', 'loading')
 
-
     nodeSelectedClasses: (->
         if @get('isSelected') then @get('config.tree.nodeSelectedClasses')?.join(" ") else null
     ).property('isSelected')
+
+    addMultiSelectionToTreeSelection: (->
+        if @get('multi-selected')
+            @get('tree.multi-selection').pushObject @get('model')
+        else
+            @get('tree.multi-selection').removeObject @get('model')
+    ).observes('multi-selected').on('init')
 
     iconClass: (->
         icons = []
@@ -138,6 +146,9 @@ TreeNode = Component.extend WithConfigMixin,
         select: ->
             return if not @get('selectable')
             @set 'tree.selected', @get('model')
+
+        toggleSelection: ->
+            if @get('multi-selected') then @set('multi-selected', '') else @set('multi-selected', 'true')
 
     children: 'getChildren'
 

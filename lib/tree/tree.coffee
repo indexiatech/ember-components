@@ -1,6 +1,6 @@
 #(c) 2014 Indexia, Inc.
 
-`import {Component, ArrayProxy, computed} from 'ember'`
+`import {Component, ArrayProxy, computed, A} from 'ember'`
 #TODO: Import
 WithConfigMixin = Em.Eu.WithConfigMixin
 
@@ -29,4 +29,39 @@ Tree = Component.extend WithConfigMixin,
     # branch being opened
     ###
     async: false
+
+    'in-multi-selection': false
+
+    'multi-selection': A()
+
+    'selected-icon': 'fa fa-check'
+    'unselected-icon': 'fa fa-times'
+
+    'expand-depth': null
+
+    'auto-expand': false
+
+    expandByDepth: (->
+        if @get('expand-depth')
+            depth = parseInt @get('expand-depth')
+            return if depth is 0
+            expandTree @get('model'), depth
+    ).observes('expand-depth')
+
 `export default Tree`
+
+expandTree = (node, depth) ->
+    return if depth is 0
+    node.set 'expanded', true
+
+    children = node.get('children')
+    if children and "function" is typeof children.then
+        children.then((loadedChildren) =>
+            loadedChildren.forEach((c) =>
+                expandTree c, depth-1
+            )
+        )
+    else
+        return if children.get('length') is 0 or depth is 0
+        for c in children
+            expandTree c, depth-1
