@@ -676,6 +676,12 @@ var WysiwygActionTmpl = _dereq_("./wysiwyg/actiontmpl")["default"] || _dereq_(".
 
 var WysiwygEditorComponent = _dereq_("./wysiwyg/editor")["default"] || _dereq_("./wysiwyg/editor");
 
+var WysiwygActionLinkComponent = _dereq_("./wysiwyg/action-link")["default"] || _dereq_("./wysiwyg/action-link");
+
+var WysiwygActionLinkTmpl = _dereq_("./wysiwyg/action-link-tmpl")["default"] || _dereq_("./wysiwyg/action-link-tmpl");
+var WysiwygActionFormatComponent = _dereq_("./wysiwyg/action-format")["default"] || _dereq_("./wysiwyg/action-format");
+
+var WysiwygActionFormatTmpl = _dereq_("./wysiwyg/action-format-tmpl")["default"] || _dereq_("./wysiwyg/action-format-tmpl");
 var AccordionComponent = _dereq_("./accordion/accordion")["default"] || _dereq_("./accordion/accordion");
 
 var AccordionItemComponent = _dereq_("./accordion/accordion-item")["default"] || _dereq_("./accordion/accordion-item");
@@ -794,6 +800,10 @@ Application.initializer({
     c.register('component:em-wysiwyg-action', WysiwygActionComponent);
     c.register('template:em-wysiwyg-action', WysiwygActionTmpl);
     c.register('component:em-wysiwyg-editor', WysiwygEditorComponent);
+    c.register('component:em-wysiwyg-action-link', WysiwygActionLinkComponent);
+    c.register('component:em-wysiwyg-action-format', WysiwygActionFormatComponent);
+    c.register('template:em-wysiwyg-action-link', WysiwygActionLinkTmpl);
+    c.register('template:em-wysiwyg-action-format', WysiwygActionFormatTmpl);
     c.register('component:em-accordion', AccordionComponent);
     c.register('component:em-accordion-item', AccordionItemComponent);
     c.register('template:em-accordion-item-tmpl', AccordionItemTmpl);
@@ -832,6 +842,10 @@ exports.WysiwygToolbarComponent = WysiwygToolbarComponent;
 exports.WysiwygActionGroupComponent = WysiwygActionGroupComponent;
 exports.WysiwygActionComponent = WysiwygActionComponent;
 exports.WysiwygEditorComponent = WysiwygEditorComponent;
+exports.WysiwygActionLinkComponent = WysiwygActionLinkComponent;
+exports.WysiwygActionLinkTmpl = WysiwygActionLinkTmpl;
+exports.WysiwygActionFormatComponent = WysiwygActionFormatComponent;
+exports.WysiwygActionFormatTmpl = WysiwygActionFormatTmpl;
 exports.AccordionComponent = AccordionComponent;
 exports.AccordionItemComponent = AccordionItemComponent;
 exports.TreeComponent = TreeComponent;
@@ -850,7 +864,7 @@ exports.ModalConfirmComponent = ModalConfirmComponent;
 exports.ModalFormComponent = ModalFormComponent;
 exports.ModalEmFormComponent = ModalEmFormComponent;
 exports.ButtonComponent = ButtonComponent;
-},{"./accordion/accordion":3,"./accordion/accordion-item":2,"./accordion/accordion-item-tmpl":1,"./button/button":5,"./button/button-tmpl":4,"./list/list":8,"./list/list-item":7,"./modal/modal":20,"./modal/modal-body":10,"./modal/modal-confirm":12,"./modal/modal-confirm-tmpl":11,"./modal/modal-css":13,"./modal/modal-emform":14,"./modal/modal-footer":15,"./modal/modal-form":16,"./modal/modal-title":17,"./modal/modal-tmpl":18,"./modal/modal-toggler":19,"./tabs/tab":23,"./tabs/tab-list":21,"./tabs/tab-panel":22,"./tabs/tabs":25,"./tabs/tabs-css":24,"./tree/node":26,"./tree/tree":34,"./tree/tree-branch":28,"./tree/tree-branch-tmpl":27,"./tree/tree-css":29,"./tree/tree-node":32,"./tree/tree-node-icon-action":30,"./tree/tree-node-tmpl":31,"./tree/tree-tmpl":33,"./wysiwyg/action":36,"./wysiwyg/action-group":35,"./wysiwyg/actiontmpl":37,"./wysiwyg/editor":38,"./wysiwyg/toolbar":39,"./wysiwyg/wysiwyg":40}],10:[function(_dereq_,module,exports){
+},{"./accordion/accordion":3,"./accordion/accordion-item":2,"./accordion/accordion-item-tmpl":1,"./button/button":5,"./button/button-tmpl":4,"./list/list":8,"./list/list-item":7,"./modal/modal":20,"./modal/modal-body":10,"./modal/modal-confirm":12,"./modal/modal-confirm-tmpl":11,"./modal/modal-css":13,"./modal/modal-emform":14,"./modal/modal-footer":15,"./modal/modal-form":16,"./modal/modal-title":17,"./modal/modal-tmpl":18,"./modal/modal-toggler":19,"./tabs/tab":23,"./tabs/tab-list":21,"./tabs/tab-panel":22,"./tabs/tabs":25,"./tabs/tabs-css":24,"./tree/node":26,"./tree/tree":34,"./tree/tree-branch":28,"./tree/tree-branch-tmpl":27,"./tree/tree-css":29,"./tree/tree-node":32,"./tree/tree-node-icon-action":30,"./tree/tree-node-tmpl":31,"./tree/tree-tmpl":33,"./wysiwyg/action":40,"./wysiwyg/action-format":36,"./wysiwyg/action-format-tmpl":35,"./wysiwyg/action-group":37,"./wysiwyg/action-link":39,"./wysiwyg/action-link-tmpl":38,"./wysiwyg/actiontmpl":41,"./wysiwyg/editor":42,"./wysiwyg/toolbar":43,"./wysiwyg/wysiwyg":44}],10:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var ArrayProxy = window.Ember.ArrayProxy;
@@ -1345,7 +1359,6 @@ ModalComponent = Component.extend(WithConfigMixin, StyleBindingsMixin, {
    * @public
    */
   open: function() {
-    this.trigger('show');
     this.sendAction('show', this);
     this.set('is-open', 'true');
     return run.schedule('afterRender', this, function() {
@@ -2432,6 +2445,67 @@ expandTree = function(node, depth) {
 };
 },{}],35:[function(_dereq_,module,exports){
 "use strict";
+exports["default"] = Ember.Handlebars.compile("{{#if icon}}\n    <i {{bind-attr class=icon}}></i>\n{{/if}}\n{{#if is-open}}\n\n  <ul style=\"display: block;\" class=\"dropdown-menu\" role=\"menu\">\n    <li><a {{action \'heading\' \'p\'}} href=\"#\">Normal</a></li>\n    <li><a {{action \'heading\' \'blockquote\'}} href=\"#\">Quote</a></li>\n\n    <li class=\"divider\"></li>\n\n    <li><a {{action \'heading\' \'h1\'}} href=\"#\"><h1>Heading 1</h1></a></li>\n    <li><a {{action \'heading\' \'h2\'}} href=\"#\"><h2>Heading 2</h2></a></li>\n    <li><a {{action \'heading\' \'h3\'}} href=\"#\"><h3>Heading 3</h3></a></li>\n\n  </ul>\n{{/if}}");
+},{}],36:[function(_dereq_,module,exports){
+"use strict";
+var Component = window.Ember.Component;
+var computed = window.Ember.computed;
+var Handlebars = window.Ember.Handlebars;
+
+var Format, WithConfigMixin;
+
+WithConfigMixin = Em.Eu.WithConfigMixin;
+
+Format = Component.extend(WithConfigMixin, {
+  tagName: 'a',
+  layoutName: 'em-wysiwyg-action-format',
+  classNameBindings: ['styleClasses', 'activeClasses'],
+  styleClasses: (function() {
+    var _ref;
+    return (_ref = this.get('config.wysiwyg.actionClasses')) != null ? _ref.join(" ") : void 0;
+  }).property(),
+  activeClasses: (function() {
+    var _ref;
+    if (this.get('active')) {
+      return (_ref = this.get('config.wysiwyg.actionActiveClasses')) != null ? _ref.join(" ") : void 0;
+    }
+  }).property('active'),
+  'is-open': false,
+  closeDropdown: function() {
+    this.set('clickHanlder', !this.get('clickHanlder'));
+    if (this.get('clickHanlder')) {
+      this.set('is-open', false);
+      return this.set('clickHanlder', false);
+    }
+  },
+  click: function() {
+    this.set('clickHanlder', true);
+    return this.set('is-open', !this.get('is-open'));
+  },
+  wysiwyg: computed.alias('parentView.wysiwyg'),
+  editor: computed.alias('wysiwyg.editor'),
+  eventInit: (function() {
+    var callFn, self;
+    self = this;
+    callFn = function() {
+      return self.get('closeDropdown').apply(self);
+    };
+    return document.addEventListener('click', callFn, false);
+  }).on('init'),
+  actions: {
+    heading: function(type) {
+      this.get('editor').restoreSelection();
+      this.get('editor').$().focus();
+      document.execCommand('formatBlock', 0, type);
+      this.get('editor').saveSelection();
+      return this.get('wysiwyg').trigger('update_actions');
+    }
+  }
+});
+
+exports["default"] = Format;;
+},{}],37:[function(_dereq_,module,exports){
+"use strict";
 var Component = window.Ember.Component;
 var computed = window.Ember.computed;
 var Handlebars = window.Ember.Handlebars;
@@ -2464,7 +2538,87 @@ ActionGroup = Component.extend(WithConfigMixin, {
 });
 
 exports["default"] = ActionGroup;;
-},{}],36:[function(_dereq_,module,exports){
+},{}],38:[function(_dereq_,module,exports){
+"use strict";
+exports["default"] = Ember.Handlebars.compile("{{#em-modal-title}}\n    {{#em-modal-toggler class=\"close\"}}<span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span>{{/em-modal-toggler}}\n    <h4 class=\"modal-title\">Enter link address</h4>\n{{/em-modal-title}}\n\n{{#em-modal-body}}\n      {{input placeholder=\"http://example.com\" action=\"addLink\" value=linkHref class=\"form-control\"}}\n{{/em-modal-body}}\n{{#em-modal-footer}}\n    {{#em-modal-toggler class=\"btn btn-default\"}}Close{{/em-modal-toggler}}\n    <button type=\"submit\" class=\"btn btn-primary\" {{ action \'addLink\' }}>Add link</button>\n{{/em-modal-footer}}\n");
+},{}],39:[function(_dereq_,module,exports){
+"use strict";
+var Component = window.Ember.Component;
+var computed = window.Ember.computed;
+var Handlebars = window.Ember.Handlebars;
+
+var Modal = _dereq_("../modal/modal")["default"] || _dereq_("../modal/modal");
+
+var Link, WithConfigMixin;
+
+WithConfigMixin = Em.Eu.WithConfigMixin;
+
+Link = Component.extend(WithConfigMixin, {
+  tagName: 'a',
+  layoutName: 'em-wysiwyg-action',
+  classNameBindings: ['styleClasses', 'activeClasses'],
+  linkHref: '',
+  initModal: (function() {
+    var container;
+    container = this.get('container');
+    container.register('view:link-modal-view', Modal.extend({
+      templateName: 'em-wysiwyg-action-link',
+      _parentView: this
+    }));
+    this.set('modal', container.lookup('view:link-modal-view'));
+    return this.get('modal').append();
+  }).on('init'),
+  styleClasses: (function() {
+    var _ref;
+    return (_ref = this.get('config.wysiwyg.actionClasses')) != null ? _ref.join(" ") : void 0;
+  }).property(),
+  activeClasses: (function() {
+    var _ref;
+    if (this.get('active')) {
+      return (_ref = this.get('config.wysiwyg.actionActiveClasses')) != null ? _ref.join(" ") : void 0;
+    }
+  }).property('active'),
+  actions: {
+    addLink: function() {
+      this.get('editor').restoreSelection();
+      this.get('editor').$().focus();
+      if (this.get('linkHref')) {
+        document.execCommand('CreateLink', 0, this.get('linkHref'));
+      } else {
+        document.execCommand('unlink', 0);
+      }
+      this.get('editor').saveSelection();
+      this.get('wysiwyg').trigger('update_actions');
+      return this.get('modal').close();
+    }
+  },
+  click: function() {
+    return this.get('modal').open();
+  },
+  wysiwyg: computed.alias('parentView.wysiwyg'),
+  editor: computed.alias('wysiwyg.editor'),
+  listenToUpdate: (function() {
+    return this.get('wysiwyg').on('update_actions', (function(_this) {
+      return function() {
+        var container;
+        container = _this.get('editor.selectionRange').commonAncestorContainer;
+        if (container.nodeType === 3) {
+          container = container.parentNode;
+        }
+        if (container.nodeName === "A") {
+          _this.set('linkHref', Ember.$(container).attr('href'));
+          return _this.set('active', true);
+        } else {
+          _this.set('linkHref', '');
+          return _this.set('active', false);
+        }
+      };
+    })(this));
+  }).on('init')
+});
+
+exports["default"] = Link;;
+},{"../modal/modal":20}],40:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var computed = window.Ember.computed;
@@ -2476,7 +2630,7 @@ WithConfigMixin = Em.Eu.WithConfigMixin;
 
 Action = Component.extend(WithConfigMixin, {
   tagName: 'a',
-  templateName: 'em-wysiwyg-action',
+  layoutName: 'em-wysiwyg-action',
   classNameBindings: ['styleClasses', 'activeClasses'],
   styleClasses: (function() {
     var _ref;
@@ -2511,10 +2665,10 @@ Action = Component.extend(WithConfigMixin, {
 });
 
 exports["default"] = Action;;
-},{}],37:[function(_dereq_,module,exports){
+},{}],41:[function(_dereq_,module,exports){
 "use strict";
 exports["default"] = Ember.Handlebars.compile("{{#if icon}}\n    <i {{bind-attr class=icon}}></i>\n{{/if}}\n");
-},{}],38:[function(_dereq_,module,exports){
+},{}],42:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var computed = window.Ember.computed;
@@ -2585,7 +2739,7 @@ Editor = Component.extend(StyleBindingsMixin, {
 });
 
 exports["default"] = Editor;;
-},{}],39:[function(_dereq_,module,exports){
+},{}],43:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var computed = window.Ember.computed;
@@ -2630,7 +2784,7 @@ Toolbar = Component.extend(WithConfigMixin, {
 });
 
 exports["default"] = Toolbar;;
-},{}],40:[function(_dereq_,module,exports){
+},{}],44:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
 var ArrayProxy = window.Ember.ArrayProxy;
@@ -2667,6 +2821,13 @@ Wysiwyg = Component.extend(WithConfigMixin, {
       content: []
     }));
   }).on('init'),
+  initEditorContent: (function() {
+    if (this.get('editor')) {
+      return Ember.run.once(this, (function() {
+        return this.get('editor').$().html(this.get('as_html'));
+      }));
+    }
+  }).observes('editor'),
 
   /**
    * Add the given `Toolbar` instance.

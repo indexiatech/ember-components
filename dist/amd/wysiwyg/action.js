@@ -12,7 +12,7 @@ define(
 
     Action = Component.extend(WithConfigMixin, {
       tagName: 'a',
-      templateName: 'em-wysiwyg-action',
+      layoutName: 'em-wysiwyg-action',
       classNameBindings: ['styleClasses', 'activeClasses'],
       styleClasses: (function() {
         var _ref;

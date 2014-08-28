@@ -21,6 +21,12 @@ var WysiwygActionTmpl = require("./wysiwyg/actiontmpl")["default"] || require(".
 
 var WysiwygEditorComponent = require("./wysiwyg/editor")["default"] || require("./wysiwyg/editor");
 
+var WysiwygActionLinkComponent = require("./wysiwyg/action-link")["default"] || require("./wysiwyg/action-link");
+
+var WysiwygActionLinkTmpl = require("./wysiwyg/action-link-tmpl")["default"] || require("./wysiwyg/action-link-tmpl");
+var WysiwygActionFormatComponent = require("./wysiwyg/action-format")["default"] || require("./wysiwyg/action-format");
+
+var WysiwygActionFormatTmpl = require("./wysiwyg/action-format-tmpl")["default"] || require("./wysiwyg/action-format-tmpl");
 var AccordionComponent = require("./accordion/accordion")["default"] || require("./accordion/accordion");
 
 var AccordionItemComponent = require("./accordion/accordion-item")["default"] || require("./accordion/accordion-item");
@@ -139,6 +145,10 @@ Application.initializer({
     c.register('component:em-wysiwyg-action', WysiwygActionComponent);
     c.register('template:em-wysiwyg-action', WysiwygActionTmpl);
     c.register('component:em-wysiwyg-editor', WysiwygEditorComponent);
+    c.register('component:em-wysiwyg-action-link', WysiwygActionLinkComponent);
+    c.register('component:em-wysiwyg-action-format', WysiwygActionFormatComponent);
+    c.register('template:em-wysiwyg-action-link', WysiwygActionLinkTmpl);
+    c.register('template:em-wysiwyg-action-format', WysiwygActionFormatTmpl);
     c.register('component:em-accordion', AccordionComponent);
     c.register('component:em-accordion-item', AccordionItemComponent);
     c.register('template:em-accordion-item-tmpl', AccordionItemTmpl);
@@ -177,6 +187,10 @@ exports.WysiwygToolbarComponent = WysiwygToolbarComponent;
 exports.WysiwygActionGroupComponent = WysiwygActionGroupComponent;
 exports.WysiwygActionComponent = WysiwygActionComponent;
 exports.WysiwygEditorComponent = WysiwygEditorComponent;
+exports.WysiwygActionLinkComponent = WysiwygActionLinkComponent;
+exports.WysiwygActionLinkTmpl = WysiwygActionLinkTmpl;
+exports.WysiwygActionFormatComponent = WysiwygActionFormatComponent;
+exports.WysiwygActionFormatTmpl = WysiwygActionFormatTmpl;
 exports.AccordionComponent = AccordionComponent;
 exports.AccordionItemComponent = AccordionItemComponent;
 exports.TreeComponent = TreeComponent;
