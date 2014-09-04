@@ -1373,7 +1373,6 @@ ModalComponent = Component.extend(WithConfigMixin, StyleBindingsMixin, {
    * @public
    */
   close: function() {
-    this.trigger('hide');
     this.sendAction('hide', this);
     this.set('is-open', void 0);
     return this.set('did-open', void 0);
