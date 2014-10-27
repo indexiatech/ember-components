@@ -14,12 +14,12 @@ Link = Component.extend WithConfigMixin,
     initModal: (->
         container = @get 'container'
 
-        container.register 'view:link-modal-view', Modal.extend({
+        container.register 'view:link-modal-view'+@get('_parentView._uuid'), Modal.extend({
             templateName: 'em-wysiwyg-action-link'
             _parentView: @
         })
 
-        @set 'modal', container.lookup('view:link-modal-view')
+        @set 'modal', container.lookup('view:link-modal-view'+@get('_parentView._uuid'))
         @get('modal').append()
     ).on('init')
 
@@ -32,6 +32,8 @@ Link = Component.extend WithConfigMixin,
             @get('config.wysiwyg.actionActiveClasses')?.join(" ")
     ).property 'active'
 
+    selection: null,
+
     actions:
         addLink: ->
             @get('editor').restoreSelection()
@@ -42,11 +44,16 @@ Link = Component.extend WithConfigMixin,
             else
                 document.execCommand 'unlink', 0
 
+            window.getSelection().extentNode.data = @get 'selection'
             @get('editor').saveSelection()
             @get('wysiwyg').trigger 'update_actions'
             @get('modal').close()
 
     click: ->
+        selection = window.getSelection()
+        if selection
+            @set 'selection', selection
+
         @get('modal').open()
         
 

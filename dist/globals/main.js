@@ -2484,13 +2484,14 @@ Format = Component.extend(WithConfigMixin, {
   wysiwyg: computed.alias('parentView.wysiwyg'),
   editor: computed.alias('wysiwyg.editor'),
   eventInit: (function() {
-    var callFn, self;
-    self = this;
-    callFn = function() {
-      return self.get('closeDropdown').apply(self);
-    };
-    return document.addEventListener('click', callFn, false);
+    this.set('closeDropdownCallback', (function() {
+      return this.closeDropdown();
+    }).bind(this));
+    return document.addEventListener('click', this.get('closeDropdownCallback'), false);
   }).on('init'),
+  eventDestroy: (function() {
+    return document.removeEventListener('click', this.get('closeDropdownCallback'), false);
+  }).on('willDestroyElement'),
   actions: {
     heading: function(type) {
       this.get('editor').restoreSelection();
@@ -2539,7 +2540,7 @@ ActionGroup = Component.extend(WithConfigMixin, {
 exports["default"] = ActionGroup;;
 },{}],38:[function(_dereq_,module,exports){
 "use strict";
-exports["default"] = Ember.Handlebars.compile("{{#em-modal-title}}\n    {{#em-modal-toggler class=\"close\"}}<span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span>{{/em-modal-toggler}}\n    <h4 class=\"modal-title\">Enter link address</h4>\n{{/em-modal-title}}\n\n{{#em-modal-body}}\n      {{input placeholder=\"http://example.com\" action=\"addLink\" value=linkHref class=\"form-control\"}}\n{{/em-modal-body}}\n{{#em-modal-footer}}\n    {{#em-modal-toggler class=\"btn btn-default\"}}Close{{/em-modal-toggler}}\n    <button type=\"submit\" class=\"btn btn-primary\" {{ action \'addLink\' }}>Add link</button>\n{{/em-modal-footer}}\n");
+exports["default"] = Ember.Handlebars.compile("{{#em-modal-title}}\n    {{#em-modal-toggler class=\"close\"}}<span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span>{{/em-modal-toggler}}\n    <h4 class=\"modal-title\">Enter link address</h4>\n{{/em-modal-title}}\n\n{{#em-modal-body}}\n      {{input placeholder=\"Title\" action=\"addLink\" value=selection class=\"form-control\"}}\n      {{input placeholder=\"http://example.com\" action=\"addLink\" value=linkHref class=\"form-control\"}}\n{{/em-modal-body}}\n{{#em-modal-footer}}\n    <button type=\"submit\" class=\"btn btn-primary\" {{ action \'addLink\' }}>Add link</button>\n    {{#em-modal-toggler class=\"btn btn-default\"}}Close{{/em-modal-toggler}}\n{{/em-modal-footer}}\n");
 },{}],39:[function(_dereq_,module,exports){
 "use strict";
 var Component = window.Ember.Component;
@@ -2560,11 +2561,11 @@ Link = Component.extend(WithConfigMixin, {
   initModal: (function() {
     var container;
     container = this.get('container');
-    container.register('view:link-modal-view', Modal.extend({
+    container.register('view:link-modal-view' + this.get('_parentView._uuid'), Modal.extend({
       templateName: 'em-wysiwyg-action-link',
       _parentView: this
     }));
-    this.set('modal', container.lookup('view:link-modal-view'));
+    this.set('modal', container.lookup('view:link-modal-view' + this.get('_parentView._uuid')));
     return this.get('modal').append();
   }).on('init'),
   styleClasses: (function() {
@@ -2577,6 +2578,7 @@ Link = Component.extend(WithConfigMixin, {
       return (_ref = this.get('config.wysiwyg.actionActiveClasses')) != null ? _ref.join(" ") : void 0;
     }
   }).property('active'),
+  selection: null,
   actions: {
     addLink: function() {
       this.get('editor').restoreSelection();
@@ -2586,12 +2588,18 @@ Link = Component.extend(WithConfigMixin, {
       } else {
         document.execCommand('unlink', 0);
       }
+      window.getSelection().extentNode.data = this.get('selection');
       this.get('editor').saveSelection();
       this.get('wysiwyg').trigger('update_actions');
       return this.get('modal').close();
     }
   },
   click: function() {
+    var selection;
+    selection = window.getSelection();
+    if (selection) {
+      this.set('selection', selection);
+    }
     return this.get('modal').open();
   },
   wysiwyg: computed.alias('parentView.wysiwyg'),

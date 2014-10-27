@@ -39,13 +39,14 @@ define(
       wysiwyg: computed.alias('parentView.wysiwyg'),
       editor: computed.alias('wysiwyg.editor'),
       eventInit: (function() {
-        var callFn, self;
-        self = this;
-        callFn = function() {
-          return self.get('closeDropdown').apply(self);
-        };
-        return document.addEventListener('click', callFn, false);
+        this.set('closeDropdownCallback', (function() {
+          return this.closeDropdown();
+        }).bind(this));
+        return document.addEventListener('click', this.get('closeDropdownCallback'), false);
       }).on('init'),
+      eventDestroy: (function() {
+        return document.removeEventListener('click', this.get('closeDropdownCallback'), false);
+      }).on('willDestroyElement'),
       actions: {
         heading: function(type) {
           this.get('editor').restoreSelection();

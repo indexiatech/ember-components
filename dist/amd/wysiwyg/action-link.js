@@ -20,11 +20,11 @@ define(
       initModal: (function() {
         var container;
         container = this.get('container');
-        container.register('view:link-modal-view', Modal.extend({
+        container.register('view:link-modal-view' + this.get('_parentView._uuid'), Modal.extend({
           templateName: 'em-wysiwyg-action-link',
           _parentView: this
         }));
-        this.set('modal', container.lookup('view:link-modal-view'));
+        this.set('modal', container.lookup('view:link-modal-view' + this.get('_parentView._uuid')));
         return this.get('modal').append();
       }).on('init'),
       styleClasses: (function() {
@@ -37,6 +37,7 @@ define(
           return (_ref = this.get('config.wysiwyg.actionActiveClasses')) != null ? _ref.join(" ") : void 0;
         }
       }).property('active'),
+      selection: null,
       actions: {
         addLink: function() {
           this.get('editor').restoreSelection();
@@ -46,12 +47,18 @@ define(
           } else {
             document.execCommand('unlink', 0);
           }
+          window.getSelection().extentNode.data = this.get('selection');
           this.get('editor').saveSelection();
           this.get('wysiwyg').trigger('update_actions');
           return this.get('modal').close();
         }
       },
       click: function() {
+        var selection;
+        selection = window.getSelection();
+        if (selection) {
+          this.set('selection', selection);
+        }
         return this.get('modal').open();
       },
       wysiwyg: computed.alias('parentView.wysiwyg'),
