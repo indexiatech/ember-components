@@ -28,6 +28,22 @@ Tree = Component.extend WithConfigMixin,
     ###
     'hovered-actions': undefined
 
+    ###
+    # An object that contains meta info about each node type's icons
+    # i.e:
+    #    {
+    #    type0: {
+    #        nodeOpenIconClasses: ['fa-li', 'fa', 'fa-minus-square-o']
+    #        nodeCloseIconClasses: ['fa-li', 'fa', 'fa-plus-square-o']
+    #    },
+    #    type1: {
+    #        nodeOpenIconClasses: ['fa-li', 'fa', 'fa-tag']
+    #        nodeCloseIconClasses: ['fa-li', 'fa', 'fa-tags']
+    #    }
+    #    }
+    ###
+    'icons-per-type': undefined
+
     ###*
     # The model to render as the root node of the tree
     # this property is expected to be defined by the user

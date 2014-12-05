@@ -113,24 +113,25 @@ TreeNode = Component.extend WithConfigMixin,
         if @get('async')
             #Show loading mode
             if @get('loading')
-                icons = icons.concat @get('config.tree.nodeLoadingIconClasses')
+                icons = icons.concat @iconFromModelOrDefault 'nodeLoadingIconClasses'
             #We don't have a children yet, that means we need to load them async, we show 'closed' icon even though there may not be
             #any childs beneath this node, we may enhance this behavior by asking the user whether the item has children beneath it
             else if not @get('model.children')
-                icons = icons.concat @get('config.tree.nodeCloseIconClasses')
+                #icons = icons.concat @get('config.tree.nodeCloseIconClasses')
+                icons = @iconFromModelOrDefault 'nodeCloseIconClasses'
             #We have children loaded already
             else
                 #No children for this one, then this is a leaf
                 if @get('model.children.length') is 0
-                    icons = icons.concat @get('config.tree.nodeLeafIconClasses')
+                    icons = icons.concat @iconFromModelOrDefault 'nodeLeafIconClasses'
                 else
                     #There are children
-                    icons = if @get('expanded') then icons.concat @get('config.tree.nodeOpenIconClasses') else icons.concat @get('config.tree.nodeCloseIconClasses')
+                    icons = if @get('expanded') then icons.concat @iconFromModelOrDefault 'nodeOpenIconClasses' else icons.concat @iconFromModelOrDefault 'nodeCloseIconClasses'
         else
             if @get('leaf')
                 icons = icons.concat @get('config.tree.nodeLeafIconClasses')
             else 
-                icons = if @get('expanded') then icons.concat @get('config.tree.nodeOpenIconClasses') else icons.concat @get('config.tree.nodeCloseIconClasses')
+                icons = if @get('expanded') then icons.concat @iconFromModelOrDefault 'nodeOpenIconClasses' else icons.concat @iconFromModelOrDefault 'nodeCloseIconClasses'
                     
         icons.join(" ")
     ).property('expanded', 'leaf', 'loading')
@@ -156,7 +157,20 @@ TreeNode = Component.extend WithConfigMixin,
             return globalHoveredActions
         
     ).property('tree.hoveredActions')
+
+    iconFromModelOrDefault: (iconConfigName) ->
+        nodeType = @get('model.nodeType')
+        console.log 'NODETYPE:', nodeType
+        iconsPerType = @get('tree.icons-per-type')
+        if nodeType and iconsPerType and iconsPerType[nodeType] and iconsPerType[nodeType][iconConfigName]
+            iconsPerType[nodeType][iconConfigName]
+        else
+            @get('config.tree')[iconConfigName]
+
     actions:
+        ###
+        # Expand or close the current node's children
+        ###
         toggle: ->
             #If already expanded then we only close
             if @get('async') and not @get('expanded') and not @get('model.children')
