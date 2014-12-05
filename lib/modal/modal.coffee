@@ -128,12 +128,15 @@ ModalComponent = Component.extend WithConfigMixin, StyleBindingsMixin,
         #Notify consumers that the modal is going to be opened anytime soon.
         @trigger 'show'
         #Send action to the controller during modal open time
-        @sendAction 'show', @
+        @sendAction 'on-show', @
         @set 'is-open', 'true'
         #Wait for component to get rendered, required for CSS effects and to notify consumers that the modal is visible now
         run.schedule('afterRender', @, ->
             @set 'did-open', 'true'
             @trigger 'shown'
+            run.schedule('afterRender', @, ->
+                @$().focus()
+            )
         )
 
     ###*
@@ -145,7 +148,7 @@ ModalComponent = Component.extend WithConfigMixin, StyleBindingsMixin,
         #Notify consumers that the modal will close anytime soon.
         @trigger 'hide'
         #Send action to the controller during modal close time
-        @sendAction 'hide', @
+        @sendAction 'on-hide', @
         @set 'is-open', undefined
         @set 'did-open', undefined
         #TODO: What about hidden event?
