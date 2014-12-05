@@ -2,6 +2,12 @@
 `import {Component, ArrayProxy, computed} from 'ember';`
 #TODO: Import
 WithConfigMixin = Em.Eu.WithConfigMixin
+getProperty = (obj, prop) ->
+    return if not obj
+    if Ember.typeOf(obj) is 'instance' or Ember.canInvoke(obj, 'get')
+        obj.get prop
+    else
+        obj[prop]
 
 ###*
 # A node of a tree.
@@ -134,6 +140,22 @@ TreeNode = Component.extend WithConfigMixin,
             @get('config.tree.nodeLeafClasses')?.join(" ")
     ).property('leaf')
 
+    hoveredActions: (->
+        globalHoveredActions = @get('tree.hovered-actions')
+        nodeType = @get('model.nodeType')
+        types = []
+        if nodeType
+            globalHoveredActions.forEach((ha) ->
+                if not getProperty(ha, 'types') or not getProperty(ha, 'types').length
+                    types.push ha
+                else
+                    types.push(ha) if getProperty(ha, 'types').contains nodeType
+            )
+            return types
+        else
+            return globalHoveredActions
+        
+    ).property('tree.hoveredActions')
     actions:
         toggle: ->
             #If already expanded then we only close

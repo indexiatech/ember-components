@@ -17,6 +17,17 @@ Tree = Component.extend WithConfigMixin,
         @get('config.tree.classes')?.join(" ")
     ).property()
 
+    ###
+    # An array that contains the hovered actions to be triggered per node
+    # i.e: 
+    # actionsMeta: [
+    #    {classes: ['fa fa-eye'], action: 'eye', types: ['x', 'y']}
+    #    {classes: ['fa fa-edit'], action: 'edit'}
+    #    {classes: ['fa fa-trash-o'], action: 'delete'}
+    # ]
+    ###
+    'hovered-actions': undefined
+
     ###*
     # The model to render as the root node of the tree
     # this property is expected to be defined by the user
