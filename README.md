@@ -2,6 +2,19 @@
 
 ##### Ember Components is a set of rich web components written for Ember.js that let you create an astonishing UI for ambitious web applications.
 
+# News
+
+We are splitting components into separated ember addons to avoid blowing up your app size with uneccessary bits:
+
+- [x] [Idx Forms Components](https://github.com/indexiatech/ember-forms)
+- [x] [Idx Buttom Component](https://github.com/indexiatech/ember-idx-button)
+- [ ] Idx Modal Component
+- [x] [Idx Tree Component](https://github.com/indexiatech/ember-idx-tree)
+- [ ] Idx WYSIWYG
+- [ ] Idx Accordion
+- [ ] Idx List
+
+
 
 # Relation to Bootstrap for Ember
 
