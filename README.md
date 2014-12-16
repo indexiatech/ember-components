@@ -8,7 +8,7 @@ We are splitting components into separated ember addons to avoid blowing up your
 
 - [x] [Idx Forms Components](https://github.com/indexiatech/ember-forms)
 - [x] [Idx Buttom Component](https://github.com/indexiatech/ember-idx-button)
-- [ ] Idx Modal Component
+- [x] [Idx Modal Component](https://github.com/indexiatech/ember-idx-modal)
 - [x] [Idx Tree Component](https://github.com/indexiatech/ember-idx-tree)
 - [ ] Idx WYSIWYG
 - [ ] Idx Accordion
