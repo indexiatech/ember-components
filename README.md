@@ -6,7 +6,7 @@ Please note that the components are designed from the beginning to support most 
 
 All our addons are used in our own products and most of them are written purely as Ember components and **Do not wrap external JS libraries to achieve their target**.
 
-# News
+# Important News!
 
 We are splitting components into separated ember addons to avoid blowing up your app size with uneccessary bits:
 
@@ -15,6 +15,8 @@ We are splitting components into separated ember addons to avoid blowing up your
 - [x] [Idx Modal Component](https://github.com/indexiatech/ember-idx-modal)
 - [x] [Idx Tree Component](https://github.com/indexiatech/ember-idx-tree)
 - [x] [Idx Charts Component](https://github.com/indexiatech/ember-idx-charts)
+- [x] [Idx Tabs Component](https://github.com/indexiatech/ember-idx-tabs)
+- [x] [Idx Tour Component](https://github.com/indexiatech/ember-idx-tour)
 - [ ] Idx WYSIWYG
 - [ ] Idx Accordion
 - [ ] Idx List
