@@ -18,7 +18,7 @@ We are splitting components into separated ember addons to avoid blowing up your
 - [x] [Idx Tabs Component](https://github.com/indexiatech/ember-idx-tabs)
 - [x] [Idx Tour Component](https://github.com/indexiatech/ember-idx-tour)
 - [ ] Idx WYSIWYG
-- [ ] Idx Accordion
+- [x] [Idx Accordion Component](https://github.com/indexiatech/ember-idx-accordion)
 - [ ] Idx List
 
 
