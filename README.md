@@ -11,7 +11,7 @@ All our addons are used in our own products and most of them are written purely 
 We are splitting components into separated ember addons to avoid blowing up your app size with uneccessary bits:
 
 - [x] [Idx Forms Components](https://github.com/indexiatech/ember-forms)
-- [x] [Idx Buttom Component](https://github.com/indexiatech/ember-idx-button)
+- [x] [Idx Button Component](https://github.com/indexiatech/ember-idx-button)
 - [x] [Idx Modal Component](https://github.com/indexiatech/ember-idx-modal)
 - [x] [Idx Tree Component](https://github.com/indexiatech/ember-idx-tree)
 - [x] [Idx Charts Component](https://github.com/indexiatech/ember-idx-charts)
