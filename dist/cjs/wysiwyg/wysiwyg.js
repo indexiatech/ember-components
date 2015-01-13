@@ -34,6 +34,13 @@ Wysiwyg = Component.extend(WithConfigMixin, {
       content: []
     }));
   }).on('init'),
+  initEditorContent: (function() {
+    if (this.get('editor')) {
+      return Ember.run.once(this, (function() {
+        return this.get('editor').$().html(this.get('as_html'));
+      }));
+    }
+  }).observes('editor'),
 
   /**
    * Add the given `Toolbar` instance.

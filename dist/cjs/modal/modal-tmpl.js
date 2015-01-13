@@ -1,0 +1,2 @@
+"use strict";
+exports["default"] = Ember.Handlebars.compile("{{#if is-open}}\n    <div class=\"modal-dialog\">\n        <div class=\"modal-content\">\n            {{yield}}\n        </div>\n    </div>\n{{/if}}");

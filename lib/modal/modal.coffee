@@ -125,8 +125,6 @@ ModalComponent = Component.extend WithConfigMixin, StyleBindingsMixin,
     # @public
     ###
     open: ->
-        #Notify consumers that the modal is going to be opened anytime soon.
-        @trigger 'show'
         #Send action to the controller during modal open time
         @sendAction 'on-show', @
         @set 'is-open', 'true'
@@ -146,7 +144,6 @@ ModalComponent = Component.extend WithConfigMixin, StyleBindingsMixin,
     ###
     close: ->
         #Notify consumers that the modal will close anytime soon.
-        @trigger 'hide'
         #Send action to the controller during modal close time
         @sendAction 'on-hide', @
         @set 'is-open', undefined

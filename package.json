@@ -1,7 +1,7 @@
 {
   "name": "ember-components",
   "description": "A suite of components for Ember.js",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "homepage": "http://ember-addons.github.io/ember-components",
   "license": "ASF 2.0",
   "authors": [

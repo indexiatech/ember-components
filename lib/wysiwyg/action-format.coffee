@@ -33,12 +33,16 @@ Format = Component.extend WithConfigMixin,
     editor: computed.alias 'wysiwyg.editor'
     
     eventInit: (->
-        self = @
-        callFn = ->
-            self.get('closeDropdown').apply(self)
+        @set 'closeDropdownCallback', (->
+            @closeDropdown()
+        ).bind(@)
 
-        document.addEventListener 'click', callFn, false
+        document.addEventListener 'click', @get('closeDropdownCallback'), false
     ).on('init')
+
+    eventDestroy: (->
+        document.removeEventListener 'click', @get('closeDropdownCallback'), false
+    ).on('willDestroyElement')
 
     actions: {
         heading: (type) ->

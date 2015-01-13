@@ -1,6 +1,6 @@
 define(
-  ["./tabs/tabs","./tabs/tabs-css","./tabs/tab-list","./tabs/tab","./tabs/tab-panel","./wysiwyg/wysiwyg","./wysiwyg/toolbar","./wysiwyg/action-group","./wysiwyg/action","./wysiwyg/actiontmpl","./wysiwyg/editor","./accordion/accordion","./accordion/accordion-item","./accordion/accordion-item-tmpl","./tree/tree","./tree/tree-tmpl","./tree/tree-css","./tree/node","./tree/tree-node","./tree/tree-node-tmpl","./tree/tree-node-icon-action","./tree/tree-branch","./tree/tree-branch-tmpl","./list/list","./list/list-item","./modal/modal","./modal/modal-css","./modal/modal-form","./modal/modal-emform","./modal/modal-title","./modal/modal-body","./modal/modal-footer","./modal/modal-toggler","./modal/modal-tmpl","./modal/modal-confirm","./modal/modal-confirm-tmpl","./button/button","./button/button-tmpl","ember","exports"],
-  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __dependency7__, __dependency8__, __dependency9__, __dependency10__, __dependency11__, __dependency12__, __dependency13__, __dependency14__, __dependency15__, __dependency16__, __dependency17__, __dependency18__, __dependency19__, __dependency20__, __dependency21__, __dependency22__, __dependency23__, __dependency24__, __dependency25__, __dependency26__, __dependency27__, __dependency28__, __dependency29__, __dependency30__, __dependency31__, __dependency32__, __dependency33__, __dependency34__, __dependency35__, __dependency36__, __dependency37__, __dependency38__, __dependency39__, __exports__) {
+  ["./tabs/tabs","./tabs/tabs-css","./tabs/tab-list","./tabs/tab","./tabs/tab-panel","./wysiwyg/wysiwyg","./wysiwyg/toolbar","./wysiwyg/action-group","./wysiwyg/action","./wysiwyg/actiontmpl","./wysiwyg/editor","./wysiwyg/action-link","./wysiwyg/action-link-tmpl","./wysiwyg/action-format","./wysiwyg/action-format-tmpl","./accordion/accordion","./accordion/accordion-item","./accordion/accordion-item-tmpl","./tree/tree","./tree/tree-tmpl","./tree/tree-css","./tree/node","./tree/tree-node","./tree/tree-node-tmpl","./tree/tree-node-icon-action","./tree/tree-branch","./tree/tree-branch-tmpl","./list/list","./list/list-item","./modal/modal","./modal/modal-css","./modal/modal-form","./modal/modal-emform","./modal/modal-title","./modal/modal-body","./modal/modal-footer","./modal/modal-toggler","./modal/modal-tmpl","./modal/modal-confirm","./modal/modal-confirm-tmpl","./button/button","./button/button-tmpl","ember","exports"],
+  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __dependency7__, __dependency8__, __dependency9__, __dependency10__, __dependency11__, __dependency12__, __dependency13__, __dependency14__, __dependency15__, __dependency16__, __dependency17__, __dependency18__, __dependency19__, __dependency20__, __dependency21__, __dependency22__, __dependency23__, __dependency24__, __dependency25__, __dependency26__, __dependency27__, __dependency28__, __dependency29__, __dependency30__, __dependency31__, __dependency32__, __dependency33__, __dependency34__, __dependency35__, __dependency36__, __dependency37__, __dependency38__, __dependency39__, __dependency40__, __dependency41__, __dependency42__, __dependency43__, __exports__) {
     "use strict";
     var TabsComponent = __dependency1__["default"] || __dependency1__;
 
@@ -24,38 +24,44 @@ define(
 
     var WysiwygEditorComponent = __dependency11__["default"] || __dependency11__;
 
-    var AccordionComponent = __dependency12__["default"] || __dependency12__;
+    var WysiwygActionLinkComponent = __dependency12__["default"] || __dependency12__;
 
-    var AccordionItemComponent = __dependency13__["default"] || __dependency13__;
+    var WysiwygActionLinkTmpl = __dependency13__["default"] || __dependency13__;
+    var WysiwygActionFormatComponent = __dependency14__["default"] || __dependency14__;
 
-    var AccordionItemTmpl = __dependency14__["default"] || __dependency14__;
+    var WysiwygActionFormatTmpl = __dependency15__["default"] || __dependency15__;
+    var AccordionComponent = __dependency16__["default"] || __dependency16__;
 
-    var TreeComponent = __dependency15__["default"] || __dependency15__;
-    var TreeTmpl = __dependency16__["default"] || __dependency16__;
-    var TreeStyle = __dependency17__["default"] || __dependency17__;
-    var TreeNode = __dependency18__["default"] || __dependency18__;
-    var TreeNodeComponent = __dependency19__["default"] || __dependency19__;
-    var TreeNodeTmpl = __dependency20__["default"] || __dependency20__;
-    var TreeNodeIconAction = __dependency21__["default"] || __dependency21__;
-    var TreeBranchComponent = __dependency22__["default"] || __dependency22__;
-    var TreeBranchTmpl = __dependency23__["default"] || __dependency23__;
-    var ListComponent = __dependency24__["default"] || __dependency24__;
-    var ListItemComponent = __dependency25__["default"] || __dependency25__;
-    var ModalComponent = __dependency26__["default"] || __dependency26__;
-    var ModalCss = __dependency27__["default"] || __dependency27__;
-    var ModalFormComponent = __dependency28__["default"] || __dependency28__;
-    var ModalEmFormComponent = __dependency29__["default"] || __dependency29__;
-    var ModalTitleComponent = __dependency30__["default"] || __dependency30__;
-    var ModalBodyComponent = __dependency31__["default"] || __dependency31__;
-    var ModalFooterComponent = __dependency32__["default"] || __dependency32__;
-    var ModalTogglerComponent = __dependency33__["default"] || __dependency33__;
-    var ModalTmpl = __dependency34__["default"] || __dependency34__;
-    var ModalConfirmComponent = __dependency35__["default"] || __dependency35__;
-    var ModalConfirmTmpl = __dependency36__["default"] || __dependency36__;
-    var ButtonComponent = __dependency37__["default"] || __dependency37__;
-    var ButtonTmplComponent = __dependency38__["default"] || __dependency38__;
-    var Application = __dependency39__.Application;
-    var Namespace = __dependency39__.Namespace;
+    var AccordionItemComponent = __dependency17__["default"] || __dependency17__;
+
+    var AccordionItemTmpl = __dependency18__["default"] || __dependency18__;
+
+    var TreeComponent = __dependency19__["default"] || __dependency19__;
+    var TreeTmpl = __dependency20__["default"] || __dependency20__;
+    var TreeStyle = __dependency21__["default"] || __dependency21__;
+    var TreeNode = __dependency22__["default"] || __dependency22__;
+    var TreeNodeComponent = __dependency23__["default"] || __dependency23__;
+    var TreeNodeTmpl = __dependency24__["default"] || __dependency24__;
+    var TreeNodeIconAction = __dependency25__["default"] || __dependency25__;
+    var TreeBranchComponent = __dependency26__["default"] || __dependency26__;
+    var TreeBranchTmpl = __dependency27__["default"] || __dependency27__;
+    var ListComponent = __dependency28__["default"] || __dependency28__;
+    var ListItemComponent = __dependency29__["default"] || __dependency29__;
+    var ModalComponent = __dependency30__["default"] || __dependency30__;
+    var ModalCss = __dependency31__["default"] || __dependency31__;
+    var ModalFormComponent = __dependency32__["default"] || __dependency32__;
+    var ModalEmFormComponent = __dependency33__["default"] || __dependency33__;
+    var ModalTitleComponent = __dependency34__["default"] || __dependency34__;
+    var ModalBodyComponent = __dependency35__["default"] || __dependency35__;
+    var ModalFooterComponent = __dependency36__["default"] || __dependency36__;
+    var ModalTogglerComponent = __dependency37__["default"] || __dependency37__;
+    var ModalTmpl = __dependency38__["default"] || __dependency38__;
+    var ModalConfirmComponent = __dependency39__["default"] || __dependency39__;
+    var ModalConfirmTmpl = __dependency40__["default"] || __dependency40__;
+    var ButtonComponent = __dependency41__["default"] || __dependency41__;
+    var ButtonTmplComponent = __dependency42__["default"] || __dependency42__;
+    var Application = __dependency43__.Application;
+    var Namespace = __dependency43__.Namespace;
 
     Application.initializer({
       name: 'em-components',
@@ -142,6 +148,10 @@ define(
         c.register('component:em-wysiwyg-action', WysiwygActionComponent);
         c.register('template:em-wysiwyg-action', WysiwygActionTmpl);
         c.register('component:em-wysiwyg-editor', WysiwygEditorComponent);
+        c.register('component:em-wysiwyg-action-link', WysiwygActionLinkComponent);
+        c.register('component:em-wysiwyg-action-format', WysiwygActionFormatComponent);
+        c.register('template:em-wysiwyg-action-link', WysiwygActionLinkTmpl);
+        c.register('template:em-wysiwyg-action-format', WysiwygActionFormatTmpl);
         c.register('component:em-accordion', AccordionComponent);
         c.register('component:em-accordion-item', AccordionItemComponent);
         c.register('template:em-accordion-item-tmpl', AccordionItemTmpl);
@@ -180,6 +190,10 @@ define(
     __exports__.WysiwygActionGroupComponent = WysiwygActionGroupComponent;
     __exports__.WysiwygActionComponent = WysiwygActionComponent;
     __exports__.WysiwygEditorComponent = WysiwygEditorComponent;
+    __exports__.WysiwygActionLinkComponent = WysiwygActionLinkComponent;
+    __exports__.WysiwygActionLinkTmpl = WysiwygActionLinkTmpl;
+    __exports__.WysiwygActionFormatComponent = WysiwygActionFormatComponent;
+    __exports__.WysiwygActionFormatTmpl = WysiwygActionFormatTmpl;
     __exports__.AccordionComponent = AccordionComponent;
     __exports__.AccordionItemComponent = AccordionItemComponent;
     __exports__.TreeComponent = TreeComponent;
