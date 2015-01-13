@@ -30,6 +30,11 @@ Wysiwyg = Component.extend WithConfigMixin,
         @set 'toolbars', ArrayProxy.create({content: []})
     ).on 'init'
 
+    initEditorContent: (->
+        if @get 'editor'
+            Ember.run.once @, (-> @get('editor').$().html(@get 'as_html'))
+    ).observes 'editor'
+
     ###*
     # Add the given `Toolbar` instance.
     ###
