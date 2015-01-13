@@ -1,6 +1,6 @@
 # Ember Components
 
-##### Ember Components is a comprehensive1 set of rich web components written purely in Ember.js that let you create an astonishing UI for ambitious web applications.
+##### Ember Components is a comprehensive set of rich web components written purely in Ember.js that let you create an astonishing UI for ambitious web applications.
 
 Please note that the components are designed from the beginning to support most of the variants and are used in production environment in multiple applications,
 
@@ -17,7 +17,7 @@ We are splitting components into separated ember addons to avoid blowing up your
 - [x] [Idx Charts Component](https://github.com/indexiatech/ember-idx-charts)
 - [x] [Idx Tabs Component](https://github.com/indexiatech/ember-idx-tabs)
 - [x] [Idx Tour Component](https://github.com/indexiatech/ember-idx-tour)
-- [ ] Idx WYSIWYG
+- [x] [Idx WYSIWYG Component](https://github.com/indexiatech/ember-idx-wysiwyg)
 - [x] [Idx Accordion Component](https://github.com/indexiatech/ember-idx-accordion)
 - [ ] Idx List
 
