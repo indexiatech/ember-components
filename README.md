@@ -19,7 +19,7 @@ We are splitting components into separated ember addons to avoid blowing up your
 - [x] [Idx Tour Component](https://github.com/indexiatech/ember-idx-tour)
 - [x] [Idx WYSIWYG Component](https://github.com/indexiatech/ember-idx-wysiwyg)
 - [x] [Idx Accordion Component](https://github.com/indexiatech/ember-idx-accordion)
-- [ ] Idx List
+- [x] [Idx List Component](https://github.com/indexiatech/ember-idx-list)
 
 
 This project will be kept as an umbrealla for referencing all addons we build, you should migrate your project to use the separated addons per your needs.
